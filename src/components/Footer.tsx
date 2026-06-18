@@ -25,7 +25,6 @@ export default function Footer() {
                 { href: '/agencies', label: 'Browse Agencies' },
                 { href: '/report', label: 'Report Outdated Info' },
                 { href: '/about', label: 'About this Directory' },
-                { href: '/admin', label: 'Admin' },
               ].map((l) => (
                 <li key={l.href}>
                   <Link href={l.href} className="text-gray-600 hover:text-brand-700 transition">

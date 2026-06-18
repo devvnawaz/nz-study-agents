@@ -1,8 +1,161 @@
 import Head from 'next/head';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import type { Institute, Agency, Representation, InstituteType, AuthorizationStatus } from '@/lib/types';
 import type { Report } from '@/lib/store';
 import { adminApi, getToken, setToken } from '@/hooks/useAdminApi';
+import type { CsvImportSummary } from '@/lib/csvImport';
+import { getCsvTemplate } from '@/lib/csvImport';
+
+function CsvImportTab() {
+  const [file, setFile] = useState<File | null>(null);
+  const [rawCsv, setRawCsv] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [summary, setSummary] = useState<CsvImportSummary | null>(null);
+  const [error, setError] = useState('');
+
+  const template = useMemo(() => getCsvTemplate(), []);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    setSummary(null);
+
+    try {
+      let csv = rawCsv.trim();
+      if (!csv && file) {
+        csv = await file.text();
+      }
+      if (!csv) throw new Error('Choose a CSV file or paste CSV text.');
+
+      const res = await fetch('/api/admin/import-csv', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-admin-token': getToken(),
+        },
+        body: JSON.stringify({ csv }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error ?? 'Import failed');
+      setSummary(json as CsvImportSummary);
+      setFile(null);
+      setRawCsv('');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Import failed');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+      <div>
+        <h2 className="text-base font-bold text-gray-900 mb-2">CSV importer</h2>
+        <p className="text-sm text-gray-600 mb-4">
+          Upload a spreadsheet export with one row per institute-agent link. The importer
+          can create missing institutes and agencies when names do not already exist.
+        </p>
+
+        <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 text-sm text-gray-700 mb-4">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <p className="font-semibold text-gray-900">CSV template</p>
+              <p className="text-xs text-gray-500 mt-1">Use this header row in your spreadsheet export.</p>
+            </div>
+            <a
+              href={`data:text/csv;charset=utf-8,${encodeURIComponent(template)}`}
+              download="nz-study-agents-import-template.csv"
+              className="btn-secondary text-xs"
+            >
+              Download template
+            </a>
+          </div>
+          <pre className="mt-3 overflow-x-auto rounded-lg bg-white p-3 text-xs text-gray-600 border border-gray-200 whitespace-pre-wrap">{template}</pre>
+        </div>
+
+        <form onSubmit={handleSubmit} className="card p-5 space-y-4">
+          <div>
+            <label className="block text-xs font-semibold text-gray-600 mb-1">CSV file</label>
+            <input
+              type="file"
+              accept=".csv,text/csv"
+              onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+              className="block w-full text-sm text-gray-700 file:mr-4 file:rounded-lg file:border-0 file:bg-brand-700 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-brand-800"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-gray-600 mb-1">Or paste CSV text</label>
+            <textarea
+              value={rawCsv}
+              onChange={(e) => setRawCsv(e.target.value)}
+              rows={10}
+              placeholder={template}
+              className={inputClass}
+            />
+          </div>
+
+          {error && <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
+
+          <button type="submit" disabled={loading} className="btn-primary">
+            {loading ? 'Importing…' : 'Import CSV'}
+          </button>
+        </form>
+      </div>
+
+      <div>
+        <h2 className="text-base font-bold text-gray-900 mb-4">Import results</h2>
+        {!summary ? (
+          <div className="rounded-xl border border-dashed border-gray-300 bg-white p-10 text-center text-gray-400">
+            Import a CSV to see per-row results here.
+          </div>
+        ) : (
+          <div className="space-y-4">
+            <div className="grid grid-cols-4 gap-3 text-center">
+              {[
+                ['Created', summary.created],
+                ['Updated', summary.updated],
+                ['Skipped', summary.skipped],
+                ['Errors', summary.errors],
+              ].map(([label, value]) => (
+                <div key={label as string} className="card p-4">
+                  <p className="text-xs uppercase tracking-wide text-gray-400">{label}</p>
+                  <p className="mt-1 text-2xl font-bold text-gray-900">{value as number}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="card p-4">
+              <p className="text-sm font-semibold text-gray-900 mb-2">Rows</p>
+              <div className="space-y-2 max-h-[520px] overflow-y-auto pr-1">
+                {summary.rows.map((row) => (
+                  <div key={`${row.rowNumber}-${row.status}-${row.message}`} className="rounded-lg border border-gray-200 p-3 text-sm">
+                    <div className="flex items-center justify-between gap-3">
+                      <p className="font-semibold text-gray-900">Row {row.rowNumber}</p>
+                      <span className={`text-xs font-semibold ${row.status === 'created' ? 'text-green-600' : row.status === 'skipped' ? 'text-yellow-700' : row.status === 'updated' ? 'text-blue-700' : 'text-red-600'}`}>
+                        {row.status}
+                      </span>
+                    </div>
+                    <p className="mt-1 text-gray-600">{row.message}</p>
+                    {(row.instituteId || row.agencyId || row.representationId) && (
+                      <p className="mt-1 text-xs text-gray-400">
+                        {row.instituteId && <span>Institute: {row.instituteId} </span>}
+                        {row.agencyId && <span>Agency: {row.agencyId} </span>}
+                        {row.representationId && <span>Link: {row.representationId}</span>}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 
 // ─────────────────────────────────────────────────────────────────────
 // Token gate
@@ -64,7 +217,19 @@ function TokenGate({ onSuccess }: { onSuccess: () => void }) {
 // Shared helpers
 // ─────────────────────────────────────────────────────────────────────
 
-type Tab = 'agencies' | 'institutes' | 'links' | 'reports';
+type Tab = 'agencies' | 'institutes' | 'links' | 'csv' | 'reports';
+
+const CSV_TAB_LABEL = 'CSV Import';
+const CSV_TAB_ACTIVE = 'csv';
+const CSV_COLUMNS_HINT = 'institute_name,agency_name,agency_city,source_url';
+
+function CsvTabHeaderHint() {
+  return (
+    <span className="ml-2 rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-gray-500">
+      {CSV_COLUMNS_HINT}
+    </span>
+  );
+}
 
 function TabButton({ label, active, onClick, badge }: { label: string; active: boolean; onClick: () => void; badge?: number }) {
   return (
@@ -591,6 +756,7 @@ export default function AdminPage() {
             <TabButton label="Agencies" active={tab === 'agencies'} onClick={() => setTab('agencies')} />
             <TabButton label="Institutes" active={tab === 'institutes'} onClick={() => setTab('institutes')} />
             <TabButton label="Links" active={tab === 'links'} onClick={() => setTab('links')} />
+            <TabButton label="CSV Import" active={tab === 'csv'} onClick={() => setTab('csv')} />
             <TabButton label="Reports" active={tab === 'reports'} onClick={() => setTab('reports')} badge={unresolvedCount} />
           </div>
         </div>
@@ -601,6 +767,7 @@ export default function AdminPage() {
         {tab === 'agencies'   && <AgenciesTab />}
         {tab === 'institutes' && <InstitutesTab />}
         {tab === 'links'      && <LinksTab />}
+        {tab === 'csv'        && <CsvImportTab />}
         {tab === 'reports'    && <ReportsTab />}
       </main>
     </>

@@ -65,9 +65,30 @@ The admin panel is protected by a token (the `ADMIN_TOKEN` env var).
 | **Agencies** | Add, edit, and delete Bangladesh agencies (name, city, address, phone, email, website, contact person, notes) |
 | **Institutes** | Add and delete NZ institutes |
 | **Links** | Connect an agency to an institute with a source URL, authorization status, and verified date |
+| **CSV Import** | Upload or paste a CSV to bulk-create institutes, agencies, and representation links |
 | **Reports** | Review and resolve student-submitted corrections |
 
 Deleting an institute or agency automatically removes its links.
+
+### CSV importer
+
+Use the **CSV Import** tab when you want to bulk-load spreadsheet data.
+
+- Download a template from the admin panel or use `templates/csv-import-template.csv`.
+- The importer expects one row per institute-agent link.
+- It can match existing institutes/agencies by exact `name` or explicit `id`.
+- If a matching institute/agency does not exist, the importer can create it.
+- Duplicate representation links are skipped.
+
+Recommended columns:
+
+`institute_name,institute_type,institute_city_in_nz,institute_official_website,institute_representative_page_url,institute_last_checked_at,agency_name,agency_city,agency_address,agency_phone,agency_email,agency_website,agency_contact_person,agency_notes,source_url,authorization_status,last_verified_at`
+
+Notes:
+- Keep `source_url` pointed at the official institute page.
+- `authorization_status` accepts `authorized`, `unverified`, or `expired`.
+- If you include commas inside addresses or notes, wrap the cell in quotes.
+- In production, all imports go through the server-side admin API and require `ADMIN_TOKEN`.
 
 ### How writes are secured
 
