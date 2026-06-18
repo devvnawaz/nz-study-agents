@@ -4,6 +4,7 @@ import { isSupabaseConfigured } from '@/lib/supabase';
 import { getSupabaseAdmin } from '@/lib/supabaseAdmin';
 import type { Institute, InstituteType } from '@/lib/types';
 import { readStore, writeStore } from '@/lib/store';
+import { revalidatePaths } from '@/lib/revalidate';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (!checkAdminToken(req, res)) return;
@@ -52,6 +53,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       last_checked_at: last_checked_at ?? new Date().toISOString().split('T')[0],
     }).select().single();
     if (error) return res.status(500).json({ error: error.message });
+    await revalidatePaths(res, ['/institutes', '/']);
     return res.status(201).json(data);
   }
 
@@ -68,8 +70,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const sb = getSupabaseAdmin()!;
+    const linksRes = await sb.from('representations').select('agency_id').eq('institute_id', id);
+    if (linksRes.error) return res.status(500).json({ error: linksRes.error.message });
+
     const { error } = await sb.from('institutes').delete().eq('id', id);
     if (error) return res.status(500).json({ error: error.message });
+
+    const agencyIds = [...new Set((linksRes.data ?? []).map((row) => row.agency_id).filter(Boolean))] as string[];
+    await revalidatePaths(res, ['/institutes', '/', `/institutes/${id}`, '/agencies', ...agencyIds.map((agencyId) => `/agencies/${agencyId}`)]);
     return res.status(200).json({ ok: true });
   }
 

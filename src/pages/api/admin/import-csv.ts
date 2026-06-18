@@ -4,6 +4,7 @@ import { getSupabaseAdmin } from '@/lib/supabaseAdmin';
 import { isSupabaseConfigured } from '@/lib/supabase';
 import type { Agency, Institute, InstituteType, Representation } from '@/lib/types';
 import { readStore, writeStore } from '@/lib/store';
+import { revalidatePaths } from '@/lib/revalidate';
 import {
   cleanOptionalText,
   cleanText,
@@ -85,6 +86,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const summaryRows: CsvImportResultRow[] = [];
+    const touchedInstituteIds = new Set<string>();
+    const touchedAgencyIds = new Set<string>();
 
     if (!isSupabaseConfigured) {
       const store = readStore();
@@ -172,6 +175,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           last_verified_at: row.last_verified_at ?? new Date().toISOString().split('T')[0],
         };
         store.representations.push(representation);
+        touchedInstituteIds.add(institute.id);
+        touchedAgencyIds.add(agency.id);
         summaryRows.push({
           rowNumber,
           status: 'created',
@@ -313,6 +318,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         agencyId: agency.id,
         representationId: representation.id,
       });
+    }
+
+    const touchedInstitutePaths = [...touchedInstituteIds].map((id) => `/institutes/${id}`);
+    const touchedAgencyPaths = [...touchedAgencyIds].map((id) => `/agencies/${id}`);
+    if (touchedInstitutePaths.length || touchedAgencyPaths.length) {
+      await revalidatePaths(res, ['/institutes', '/agencies', '/', ...touchedInstitutePaths, ...touchedAgencyPaths]);
     }
 
     return res.status(200).json(makeSummary(summaryRows));

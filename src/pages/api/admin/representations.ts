@@ -4,6 +4,7 @@ import { isSupabaseConfigured } from '@/lib/supabase';
 import { getSupabaseAdmin } from '@/lib/supabaseAdmin';
 import type { Representation, AuthorizationStatus } from '@/lib/types';
 import { readStore, writeStore } from '@/lib/store';
+import { revalidatePaths } from '@/lib/revalidate';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (!checkAdminToken(req, res)) return;
@@ -54,6 +55,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (error.code === '23505') return res.status(409).json({ error: 'This link already exists.' });
       return res.status(500).json({ error: error.message });
     }
+
+    await revalidatePaths(res, ['/institutes', '/agencies', '/', `/institutes/${institute_id}`, `/agencies/${agency_id}`]);
     return res.status(201).json(data);
   }
 
@@ -69,8 +72,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const sb = getSupabaseAdmin()!;
+    const existingRes = await sb.from('representations').select('institute_id, agency_id').eq('id', id).single();
+    if (existingRes.error) return res.status(500).json({ error: existingRes.error.message });
+
     const { error } = await sb.from('representations').delete().eq('id', id);
     if (error) return res.status(500).json({ error: error.message });
+
+    await revalidatePaths(res, ['/institutes', '/agencies', '/', `/institutes/${existingRes.data.institute_id}`, `/agencies/${existingRes.data.agency_id}`]);
     return res.status(200).json({ ok: true });
   }
 

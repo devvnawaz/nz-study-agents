@@ -4,6 +4,7 @@ import { isSupabaseConfigured } from '@/lib/supabase';
 import { getSupabaseAdmin } from '@/lib/supabaseAdmin';
 import type { Agency } from '@/lib/types';
 import { readStore, writeStore } from '@/lib/store';
+import { revalidatePaths } from '@/lib/revalidate';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (!checkAdminToken(req, res)) return;
@@ -49,6 +50,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const sb = getSupabaseAdmin()!;
     const { data, error } = await sb.from('agencies').insert(payload).select().single();
     if (error) return res.status(500).json({ error: error.message });
+    await revalidatePaths(res, ['/agencies', '/']);
     return res.status(201).json(data);
   }
 
@@ -84,10 +86,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const sb = getSupabaseAdmin()!;
-    const { data, error } = await sb
-      .from('agencies').update(payload).eq('id', id).select().single();
-    if (error) return res.status(500).json({ error: error.message });
-    return res.status(200).json(data);
+    const [linksRes, updateRes] = await Promise.all([
+      sb.from('representations').select('institute_id').eq('agency_id', id),
+      sb.from('agencies').update(payload).eq('id', id).select().single(),
+    ]);
+    if (linksRes.error) return res.status(500).json({ error: linksRes.error.message });
+    if (updateRes.error) return res.status(500).json({ error: updateRes.error.message });
+
+    const instituteIds = [...new Set((linksRes.data ?? []).map((row) => row.institute_id).filter(Boolean))] as string[];
+    await revalidatePaths(res, ['/agencies', '/', `/agencies/${id}`, ...instituteIds.map((instituteId) => `/institutes/${instituteId}`)]);
+    return res.status(200).json(updateRes.data);
   }
 
   if (req.method === 'DELETE') {
@@ -103,8 +111,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const sb = getSupabaseAdmin()!;
+    const linksRes = await sb.from('representations').select('institute_id').eq('agency_id', id);
+    if (linksRes.error) return res.status(500).json({ error: linksRes.error.message });
+
     const { error } = await sb.from('agencies').delete().eq('id', id);
     if (error) return res.status(500).json({ error: error.message });
+
+    const instituteIds = [...new Set((linksRes.data ?? []).map((row) => row.institute_id).filter(Boolean))] as string[];
+    await revalidatePaths(res, ['/agencies', '/', '/institutes', ...instituteIds.map((instituteId) => `/institutes/${instituteId}`)]);
     return res.status(200).json({ ok: true });
   }
 
