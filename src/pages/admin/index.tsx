@@ -273,6 +273,22 @@ function AgenciesTab() {
   const [agencies, setAgencies] = useState<Agency[]>([]);
   const [form, setForm] = useState<typeof emptyAgency>(emptyAgency);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const placeholderContactPerson = 'Contact Person';
+  const normalizeOptionalField = (value: string) => {
+    const cleaned = value.trim();
+    if (!cleaned) return '';
+    return cleaned === placeholderContactPerson ? '' : cleaned;
+  };
+  const normalizeAgencyForm = (agency: Agency) => ({
+    name: agency.name,
+    city: agency.city,
+    address: agency.address,
+    phone: agency.phone,
+    email: agency.email,
+    website: agency.website,
+    contact_person: normalizeOptionalField(agency.contact_person ?? ''),
+    notes: normalizeOptionalField(agency.notes ?? ''),
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -285,16 +301,7 @@ function AgenciesTab() {
 
   function startEdit(agency: Agency) {
     setEditingId(agency.id);
-    setForm({
-      name: agency.name,
-      city: agency.city,
-      address: agency.address,
-      phone: agency.phone,
-      email: agency.email,
-      website: agency.website,
-      contact_person: agency.contact_person ?? '',
-      notes: agency.notes ?? '',
-    });
+    setForm(normalizeAgencyForm(agency));
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 

@@ -6,6 +6,16 @@ import type { Agency } from '@/lib/types';
 import { readStore, writeStore } from '@/lib/store';
 import { revalidatePaths } from '@/lib/revalidate';
 
+function cleanOptional(value?: string): string | undefined {
+  const cleaned = value?.trim() ?? '';
+  if (!cleaned || cleaned === 'Contact Person') return undefined;
+  return cleaned;
+}
+
+function toNullable(value: string | undefined): string | null {
+  return value ?? null;
+}
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (!checkAdminToken(req, res)) return;
 
@@ -35,8 +45,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       phone: (phone ?? '').trim(),
       email: (email ?? '').trim(),
       website: (website ?? '').trim(),
-      contact_person: contact_person?.trim() || undefined,
-      notes: notes?.trim() || undefined,
+      contact_person: cleanOptional(contact_person),
+      notes: cleanOptional(notes),
     };
 
     if (!isSupabaseConfigured) {
@@ -48,7 +58,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const sb = getSupabaseAdmin()!;
-    const { data, error } = await sb.from('agencies').insert(payload).select().single();
+    const { data, error } = await sb.from('agencies').insert({
+      ...payload,
+      contact_person: toNullable(payload.contact_person),
+      notes: toNullable(payload.notes),
+    }).select().single();
     if (error) return res.status(500).json({ error: error.message });
     await revalidatePaths(res, ['/agencies', '/']);
     return res.status(201).json(data);
@@ -72,8 +86,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       phone: (phone ?? '').trim(),
       email: (email ?? '').trim(),
       website: (website ?? '').trim(),
-      contact_person: contact_person?.trim() || undefined,
-      notes: notes?.trim() || undefined,
+      contact_person: cleanOptional(contact_person),
+      notes: cleanOptional(notes),
     };
 
     if (!isSupabaseConfigured) {
@@ -88,7 +102,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const sb = getSupabaseAdmin()!;
     const [linksRes, updateRes] = await Promise.all([
       sb.from('representations').select('institute_id').eq('agency_id', id),
-      sb.from('agencies').update(payload).eq('id', id).select().single(),
+      sb.from('agencies').update({
+        ...payload,
+        contact_person: toNullable(payload.contact_person),
+        notes: toNullable(payload.notes),
+      }).eq('id', id).select().single(),
     ]);
     if (linksRes.error) return res.status(500).json({ error: linksRes.error.message });
     if (updateRes.error) return res.status(500).json({ error: updateRes.error.message });
