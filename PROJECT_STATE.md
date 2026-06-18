@@ -1,126 +1,107 @@
 # PROJECT_STATE.md
 
-_Last updated: 2026-06-17 — checkpoint before auto-compact (post-deployment verification)._
+_Last updated: 2026-06-18 — post CSV Importer + footer edit handoff._
 
-## 1. Current project status
+## Current project status
 
-The website is **built, deployed to production, and confirmed running in Supabase
-mode**. All code is committed to git (`main`, remote `origin` =
-`https://github.com/devvnawaz/nz-study-agents.git`). Feature work is **paused**.
+The NZ Study Agent Directory is built, deployed, connected to Supabase, and under
+GitHub/Vercel workflow. Feature work is paused after completing and pushing the
+CSV Importer feature and removing the public Admin link from the footer.
 
-The app lets Bangladeshi students select an NZ institute and see its authorized
-agents in Bangladesh (contact, website, address, source link, last-verified date).
+- Branch: `main`
+- Remote: `origin` → `https://github.com/devvnawaz/nz-study-agents.git`
+- Latest commit: `8a02aa2 Add CSV importer and remove Admin link from footer`
+- Working tree before this handoff update: clean
+- Production URL: https://nz-study-agents.vercel.app
 
-## 2. Latest deployment status
+## Latest completed feature: CSV Importer
 
-- **Live URL:** https://nz-study-agents.vercel.app — `GET /` → 200.
-- Public pages all 200: `/`, `/institutes`, `/agencies`, `/about`, `/report`.
-- Custom 404 works.
-- **Supabase mode is ACTIVE in production** — verified: no demo banner in HTML, no
-  placeholder URL in the JS bundle (env vars were set before the build).
-- Admin auth locked down: `/api/admin/*` returns **401** with no token and with a
-  wrong token.
+A bulk CSV importer was added to the existing admin panel.
 
-## 3. Supabase / Vercel environment setup status
+### What it does
 
-- **Vercel production env vars: SET BY USER** — do NOT add or re-add them.
-  (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`,
-  `SUPABASE_SERVICE_ROLE_KEY`, `ADMIN_TOKEN`.)
-- **Supabase schema: APPLIED** — user ran `supabase/schema.sql` (tables exist).
-- The local machine is **not** linked to Vercel (`.vercel/` absent) and the Vercel
-  CLI is **not installed** locally. `ADMIN_TOKEN` value is known only to the user.
+- Adds `/api/admin/import-csv` as a token-gated server-side import endpoint.
+- Adds a **CSV Import** tab to `/admin`.
+- Supports uploading or pasting CSV content.
+- Provides a CSV template download in the UI.
+- Adds a repo template at `templates/csv-import-template.csv`.
+- Adds row-by-row import results: created / skipped / updated / errors.
+- Works in local demo/file-store mode and Supabase production mode.
 
-## 4. What has been completed
+### Import behavior
 
-- Full Next.js 14 (Pages Router) + TypeScript + Tailwind app.
-- Data layer with dual mode: Supabase when configured, local JSON file-store
-  (`.data/store.json`) in demo mode.
-- Public pages: home/search, institutes list + detail, agencies list + detail,
-  about, report form, 404.
-- Admin panel at `/admin`: token gate + 4 tabs (Agencies, Institutes, Links, Reports).
-- Admin API routes (`/api/admin/*`) + public `/api/reports`.
-- Supabase schema with RLS (public read, public insert on reports, writes via
-  service role only).
-- Deployment readiness reviewed (twice) — all green.
-- Deployed to Vercel; production verified in Supabase mode.
-- Memory files: PROJECT_STATE.md, TASKS.md, DECISIONS.md, CLAUDE.md.
+- One CSV row = one institute-agency representation link.
+- Required fields: `institute_name`, `agency_name`, `agency_city`, `source_url`.
+- Existing institutes/agencies are matched by explicit ID if provided, otherwise
+  by exact case-insensitive name.
+- Missing institutes/agencies can be created.
+- Duplicate representation links are skipped.
+- `authorization_status` accepts `authorized`, `unverified`, or `expired`; defaults
+  to `authorized`.
+- If address/notes contain commas, the CSV cell must be quoted.
 
-## 5. Current known issues
+## Footer link edit
 
-- **Supabase database is EMPTY (expected, not a bug).** Schema was applied but no
-  rows were migrated. Consequence:
-  - `/institutes/[id]` (e.g. `/institutes/inst-uoa`) returns **404** in production
-    (no rows → `getStaticPaths` pre-rendered nothing; `fallback:'blocking'` →
-    `getInstituteById` returns null → 404).
-  - Home/list pages render empty states ("No institutes match", zero stats).
-  - **Fix = enter data**, not a code change. Use `/admin` or the admin API.
-- Seed data (`src/lib/seed.ts`) and `.data/store.json` are local-only; they were
-  **not** migrated into Supabase.
-- Agency seed entries are **placeholder "(DEMO)"** data; institute
-  `representative_page_url`s are unverified guesses — must be verified before real use.
-- `.data/store.json` writes do **not** persist on Vercel serverless — only Supabase
-  persists in production (by design).
+The visible **Admin** link was removed from the public footer. No other public
+`/admin` links were found outside the admin page itself. The `/admin` route remains
+available directly for authorized users.
 
-## 6. Exact next task
+## Current deployment / Git status
 
-**Populate the Supabase database** so the production site shows content. Two options:
-1. Manually via `/admin` UI (sign in with ADMIN_TOKEN) or admin API curl calls
-   (see smoke-test checklist / "commands that worked").
-2. Build the **CSV importer** (task b, currently paused) to bulk-load agencies +
-   links from a spreadsheet — this was the originally-planned next feature.
+- CSV Importer + footer edit were committed and pushed in commit `8a02aa2`.
+- Vercel is expected to auto-deploy from GitHub on push.
+- `main` was up to date with `origin/main` before this memory-only handoff update.
+- The Vercel project directory is ignored via `.vercel` (commit `308f973`).
 
-After data is in: run the smoke-test checklist (add institute → agency → link →
-confirm public page renders after ISR revalidate ~60s).
+## Current Supabase / Vercel status
 
-## 7. Commands that worked
+- Vercel production environment variables were configured by the user; do not add
+  or re-add them unless explicitly asked.
+- Supabase `schema.sql` was run by the user; tables and RLS exist.
+- Production was previously verified to be in Supabase mode (no demo banner; public
+  pages 200; admin API 401 without/wrong token).
+- Local demo mode uses `.data/store.json`, which is ignored and should not be committed.
 
-```bash
-# Build & local run
-cd ~/nz-study-agents
-npm install
-npm run build            # passes — 31 routes
-npm run dev              # http://localhost:3000 (admin token in dev = "dev")
+## Files changed recently
 
-# Background dev + wait-until-ready
-(npm run dev > /tmp/nz-dev.log 2>&1 &)
-until grep -q "Ready in" /tmp/nz-dev.log; do sleep 0.5; done
-pkill -f "next dev"      # stop strays (avoid double-server on 3000/3001)
+CSV Importer/footer commit `8a02aa2` changed:
 
-# Reset local demo data
-rm -rf .data
+- `README.md` — CSV importer documentation.
+- `src/components/Footer.tsx` — removed footer Admin link.
+- `src/lib/csvImport.ts` — CSV parsing, template, validation helpers, import summary types.
+- `src/pages/admin/index.tsx` — added CSV Import tab and UI.
+- `src/pages/api/admin/import-csv.ts` — server-side token-gated import endpoint.
+- `templates/csv-import-template.csv` — spreadsheet template.
 
-# Git state
-git status --short        # clean
-git ls-files | grep -E "\.env\.local|^\.data/"   # empty = good (not tracked)
+Additional relevant prior commits:
 
-# Production verification (note: re-resolve curl path per command in this shell)
-CURL=$(which curl)
-$CURL -s -o /dev/null -w "%{http_code}" https://nz-study-agents.vercel.app/        # 200
-$CURL -s -o /dev/null -w "%{http_code}" -H "x-admin-token: wrong" \
-  https://nz-study-agents.vercel.app/api/admin/agencies                            # 401
+- `8969309` / PR merge `dfc5676` — Vercel Web Analytics installed; `_app.tsx`
+  imports `@vercel/analytics/next`.
+- `308f973` — `.vercel` ignored.
+- `5b4520e` — initial project memory files.
 
-# Admin API to add data (user runs with real token)
-curl -s -H "x-admin-token: YOUR_ADMIN_TOKEN" \
-  https://nz-study-agents.vercel.app/api/admin/agencies                            # [] not 401
-# POST institute/agency → 201; POST representations links them; duplicate link → 409
-```
+## Known issues / cautions
 
-Note: in one shell session `curl` fell out of PATH after the first call inside a
-`for` loop — re-resolve with `CURL=$(which curl)` and call `$CURL` to be safe.
+- Production data may still be empty unless the user imported or entered real data.
+- Seed/demo agencies are placeholders and must not be treated as verified real data.
+- CSV importer currently matches existing agencies/institutes by exact normalized name;
+  spelling differences create new rows.
+- The importer skips duplicate institute-agency links; it does not update existing
+  representation records.
+- Production admin API requires the user's real `ADMIN_TOKEN`; do not ask for or log it.
+- Local smoke tests may create `.data/store.json`; remove `.data/` after testing.
+- `npm install @vercel/analytics` introduced npm audit warnings reported earlier
+  (2 low, 1 moderate, 1 critical). No remediation has been performed yet.
 
-## 8. Important decisions made
+## Exact next recommended task
 
-(See DECISIONS.md for full rationale.)
-- Stack: Next.js 14 Pages Router + Supabase + Vercel + Tailwind.
-- Manual scaffold (no create-next-app) to avoid interactive prompts.
-- Dual-mode data layer: Supabase OR local file-store; `isSupabaseConfigured`
-  switches by inspecting env vars (and rejecting placeholder values).
-- Security: anon key public (read-only via RLS); all writes through server-side
-  `/api/admin/*` routes gated by `ADMIN_TOKEN`, using service-role key (server-only,
-  no `NEXT_PUBLIC_` prefix). Admin page imports `store` as type-only.
-- `ADMIN_TOKEN` fail-closed in production (defaults to `dev` only in development).
-- ISR `revalidate: 3600`, `fallback: 'blocking'` on dynamic pages.
-- Source transparency: every listing carries source_url + authorization_status +
-  last_verified_at; disclaimers shown site-wide.
+Run a **production CSV importer smoke test** using the real admin token:
 
-No app functionality changed in this checkpoint — documentation only.
+1. Open `https://nz-study-agents.vercel.app/admin`.
+2. Log in with `ADMIN_TOKEN`.
+3. Use **CSV Import** with a small verified CSV containing 1 institute + 1 agency + 1 source URL.
+4. Confirm result shows `created: 1`, `errors: 0`.
+5. Wait for ISR or redeploy, then confirm the public institute page shows the imported agency.
+6. If satisfied, begin real data collection/import from verified institute source pages.
+
+Do not build new features until production import is verified with real data.

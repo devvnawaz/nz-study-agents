@@ -64,3 +64,33 @@ _Architectural and process decisions, with rationale. Last updated 2026-06-17._
 - **Seed agencies are clearly labelled "(DEMO)"** and must be replaced with verified
   data before real use; institute representative-page URLs are unverified guesses.
 - **Duplicate representation links rejected** (409) to keep the link table clean.
+
+## CSV importer decisions (2026-06-18)
+
+- **Why CSV import over manual entry** — the directory's core value is breadth across
+  many institutes, each with many Bangladesh agents. Manual single-record entry does
+  not scale for bulk onboarding or spreadsheet-sourced data; a CSV importer lets an
+  admin load many institute-agency links in one pass while keeping the same
+  validation and security guarantees as the per-record admin forms.
+- **One row = one representation link** — each CSV row models an institute↔agency
+  relationship, not just an agency. This keeps the many-to-many model intact and lets
+  one agency appear under multiple institutes via multiple rows.
+- **Server-side, token-gated import** — import runs in `/api/admin/import-csv`,
+  reusing `checkAdminToken` and (in production) the service-role client. CSV parsing
+  and writes never happen client-side, consistent with the existing admin security model.
+- **Dual-mode reuse** — the importer writes to the local file-store in demo mode and
+  to Supabase in production, matching the existing data-layer split. No new storage path.
+- **Matching strategy** — existing institutes/agencies are matched by explicit `id`
+  if provided, else by exact case-insensitive `name`. Unknown ones can be created.
+  Exact-name matching was chosen for predictability; fuzzy matching is a deliberate
+  backlog item to avoid silent wrong-merges.
+- **Validation** — required columns are `institute_name`, `agency_name`, `agency_city`,
+  `source_url`; rows missing any are reported as `error` without aborting the whole import.
+- **Deduplication** — duplicate institute-agency links are reported as `skipped`
+  rather than erroring or duplicating, both within a single CSV (in-memory `seen` set)
+  and against existing data (DB unique constraint / store lookup). Import is
+  create-or-skip; it does not update existing representation records (update is backlog).
+- **Per-row result summary** — the endpoint returns created/updated/skipped/errors
+  counts plus a per-row status/message, so admins can see exactly what happened.
+- **CSV quoting** — a minimal RFC-style line parser handles quoted cells so commas in
+  addresses/notes are preserved; admins are told to quote such cells.
