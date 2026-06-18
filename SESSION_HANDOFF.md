@@ -2,6 +2,10 @@
 
 _Concise handoff for the next Claude Code session. Written 2026-06-18._
 
+## Current status
+
+The project is deployed and stable. Supabase and Vercel are connected. Admin token works in production and preview.
+
 ## Snapshot
 
 - **Project:** NZ Study Agent Directory (Bangladeshi students → authorized NZ agents).
@@ -23,6 +27,8 @@ _Concise handoff for the next Claude Code session. Written 2026-06-18._
    - Verified locally in demo mode: first import created a link; re-import skipped duplicate.
 2. **Footer edit** (pushed in `8a02aa2`): removed public Admin link; no other public
    admin links remain. `/admin` route still works directly.
+
+3. Changes pushed to Git
 
 ## Next task (do this first)
 
@@ -50,6 +56,11 @@ Then proceed to real verified data collection/import.
 - Treat seed/"(DEMO)" agencies as placeholders, not verified data.
 - Importer is create-or-skip (no update of existing links); name matching is exact.
 - Open npm audit warnings exist from `@vercel/analytics` install (not yet addressed).
+- CSV imports can affect production data
+- Must validate rows before import
+- Avoid destructive Supabase SQL
+- Do not expose service role key
+- Do not commit .env or .vercel
 
 ## Memory files to read on resume
 
@@ -57,3 +68,23 @@ Then proceed to real verified data collection/import.
 - `TASKS.md` — Done / Next / follow-ups / Backlog / Blocked.
 - `DECISIONS.md` — architecture + CSV importer decisions.
 - `CHANGELOG.md` — feature history.
+
+## Important files
+
+- PROJECT_STATE.md
+- TASKS.md
+- DECISIONS.md
+- CHANGELOG.md
+- CLAUDE.md
+- src/pages/admin/index.tsx
+- src/pages/api/admin/import.ts or relevant importer route
+- public/templates/... if CSV template exists
+
+
+## Next recommended task
+
+Start adding verified agency data using the CSV import workflow.
+
+## Startup instruction for next session
+
+Read all memory files first, summarize state, then wait for user confirmation.
