@@ -41,3 +41,13 @@ export function formatDate(iso: string): string {
     day: 'numeric', month: 'long', year: 'numeric',
   });
 }
+
+export function formatPhone(raw: string): string {
+  const digits = raw.replace(/\D/g, '');
+  if (!digits) return raw.trim();
+  let national = digits;
+  if (national.startsWith('880')) national = national.slice(3);
+  national = national.replace(/^0+/, '');
+  if (!national) return raw.trim();
+  return `+880 ${national}`;
+}

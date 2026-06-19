@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import type { AgencyForInstitute } from '@/lib/types';
-import { getStatusBadgeClass, getStatusLabel, formatDate } from '@/lib/utils';
+import { getStatusBadgeClass, getStatusLabel, formatDate, formatPhone } from '@/lib/utils';
 
 interface AgencyCardProps {
   agency: AgencyForInstitute;
@@ -34,8 +34,8 @@ function CardBody({ agency }: { agency: AgencyForInstitute }) {
           <div>
             <dt className="text-xs font-medium text-gray-400 uppercase tracking-wide">Phone</dt>
             <dd>
-              <a href={`tel:${agency.phone}`} className="text-brand-700 hover:underline">
-                {agency.phone}
+              <a href={`tel:${formatPhone(agency.phone).replace(/\s/g, '')}`} className="text-brand-700 hover:underline">
+                {formatPhone(agency.phone)}
               </a>
             </dd>
           </div>

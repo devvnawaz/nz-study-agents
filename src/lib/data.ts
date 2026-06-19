@@ -96,7 +96,7 @@ export async function getAgenciesForInstitute(
         authorization_status: r.authorization_status,
         last_verified_at: r.last_verified_at,
       }];
-    });
+    }).sort((a, b) => a.name.localeCompare(b.name));
   }
 
   const sb = getSupabase()!;
@@ -111,7 +111,7 @@ export async function getAgenciesForInstitute(
     source_url: row.source_url as string,
     authorization_status: row.authorization_status as AuthorizationStatus,
     last_verified_at: row.last_verified_at as string,
-  }));
+  })).sort((a, b) => a.name.localeCompare(b.name));
 }
 
 // ──────────────────────────────────────────────────────────────────────

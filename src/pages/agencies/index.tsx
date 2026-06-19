@@ -7,6 +7,7 @@ import DemoBanner from '@/components/DemoBanner';
 import type { Agency } from '@/lib/types';
 import { getAllAgencies } from '@/lib/data';
 import { isSupabaseConfigured } from '@/lib/supabase';
+import { formatPhone } from '@/lib/utils';
 
 interface AgenciesPageProps {
   agencies: Agency[];
@@ -84,7 +85,7 @@ export default function AgenciesPage({ agencies, demoMode }: AgenciesPageProps) 
                 <Link key={agency.id} href={`/agencies/${agency.id}`} className="card block p-5 group">
                   <h3 className="font-semibold text-gray-900 group-hover:text-brand-700 transition">{agency.name}</h3>
                   <p className="mt-1 text-sm text-gray-500">{agency.city}, Bangladesh</p>
-                  {agency.phone && <p className="mt-2 text-sm text-gray-600">📞 {agency.phone}</p>}
+                  {agency.phone && <p className="mt-2 text-sm text-gray-600">📞 {formatPhone(agency.phone)}</p>}
                   {agency.email && <p className="text-sm text-gray-600 break-all">✉️ {agency.email}</p>}
                 </Link>
               ))}

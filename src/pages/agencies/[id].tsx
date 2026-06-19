@@ -7,7 +7,7 @@ import Disclaimer from '@/components/Disclaimer';
 import type { Agency, InstituteForAgency } from '@/lib/types';
 import { getAllAgencies, getAgencyById, getInstitutesForAgency } from '@/lib/data';
 import { isSupabaseConfigured } from '@/lib/supabase';
-import { getTypeIcon, getTypeBadgeClass, getStatusBadgeClass, getStatusLabel, formatDate } from '@/lib/utils';
+import { getTypeIcon, getTypeBadgeClass, getStatusBadgeClass, getStatusLabel, formatDate, formatPhone } from '@/lib/utils';
 
 interface AgencyDetailProps {
   agency: Agency;
@@ -59,7 +59,7 @@ export default function AgencyDetail({ agency, institutes, demoMode }: AgencyDet
                     <div>
                       <dt className="text-xs font-medium uppercase tracking-wide text-gray-400">Phone</dt>
                       <dd>
-                        <a href={`tel:${agency.phone}`} className="text-brand-700 hover:underline">{agency.phone}</a>
+                        <a href={`tel:${formatPhone(agency.phone).replace(/\s/g, '')}`} className="text-brand-700 hover:underline">{formatPhone(agency.phone)}</a>
                       </dd>
                     </div>
                   )}
