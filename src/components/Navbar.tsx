@@ -37,6 +37,12 @@ export default function Navbar() {
             About
           </Link>
           <Link
+            href="/interview-questions"
+            className="rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition"
+          >
+            Interview Questions
+          </Link>
+          <Link
             href="/report"
             className="ml-2 btn-primary text-xs sm:text-sm"
           >
