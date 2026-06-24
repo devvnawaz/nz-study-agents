@@ -5,6 +5,10 @@ import { getSupabaseAdmin } from '@/lib/supabaseAdmin';
 import type { Agency } from '@/lib/types';
 import { readStore, writeStore } from '@/lib/store';
 import { revalidatePaths } from '@/lib/revalidate';
+import { rateLimit } from '@/lib/rateLimit';
+
+const RATE_LIMIT_WINDOW_MS = 60_000;
+const RATE_LIMIT_MAX = 60;
 
 function cleanOptional(value?: string): string | undefined {
   const cleaned = value?.trim() ?? '';
@@ -18,6 +22,7 @@ function toNullable(value: string | undefined): string | null {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (!checkAdminToken(req, res)) return;
+  if (!rateLimit(req, res, { windowMs: RATE_LIMIT_WINDOW_MS, max: RATE_LIMIT_MAX, prefix: 'admin:agencies' })) return;
 
   if (req.method === 'GET') {
     if (!isSupabaseConfigured) {

@@ -162,6 +162,7 @@ function CsvImportTab() {
 // ─────────────────────────────────────────────────────────────────────
 
 function TokenGate({ onSuccess }: { onSuccess: () => void }) {
+  const showDemoHint = process.env.NODE_ENV === 'development';
   const [token, setTokenInput] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -175,7 +176,7 @@ function TokenGate({ onSuccess }: { onSuccess: () => void }) {
       await adminApi.getAgencies();
       onSuccess();
     } catch {
-      setError('Incorrect admin token. Try "dev" in demo mode.');
+      setError('Incorrect admin token.');
     } finally {
       setLoading(false);
     }
@@ -197,7 +198,7 @@ function TokenGate({ onSuccess }: { onSuccess: () => void }) {
               type="password"
               value={token}
               onChange={(e) => setTokenInput(e.target.value)}
-              placeholder="e.g. dev"
+              placeholder={showDemoHint ? 'e.g. dev' : 'Admin token'}
               autoFocus
               className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
             />
@@ -207,7 +208,9 @@ function TokenGate({ onSuccess }: { onSuccess: () => void }) {
             {loading ? 'Checking…' : 'Sign in'}
           </button>
         </form>
-        <p className="mt-4 text-xs text-center text-gray-400">In local demo mode the default token is <code className="bg-gray-100 px-1 rounded">dev</code></p>
+        {showDemoHint && (
+          <p className="mt-4 text-xs text-center text-gray-400">In local demo mode the default token is <code className="bg-gray-100 px-1 rounded">dev</code></p>
+        )}
       </div>
     </div>
   );

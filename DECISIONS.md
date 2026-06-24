@@ -36,7 +36,29 @@ _Architectural and process decisions, with rationale. Last updated 2026-06-17._
   the `dev` fallback token applies ONLY when `NODE_ENV === 'development'`.
 - **Admin UI stores token in `localStorage`** and attaches it per request — acceptable
   for an internal admin tool; revisit if exposed to less-trusted users.
+- **Admin route hardening (2026-06-24)** — the public panel moved from `/admin` to
+  `/manage`; `/admin` now returns 404; production no longer shows the demo-mode token hint;
+  basic in-memory rate limiting is applied to `/api/admin/*` routes. This reduces accidental
+  discovery without changing the token-based auth model.
 - Upgrade path: Supabase Auth for named multi-user admin accounts (backlog).
+
+## Rate limiting
+
+- **Lightweight in-memory limiter** (`src/lib/rateLimit.ts`) — 60 requests/minute per IP per admin route.
+- Uses `x-forwarded-for` when present, with socket address fallback.
+- Chosen as a minimal hardening step; it is intentionally simple and can be replaced with
+  a distributed limiter later if traffic warrants it.
+
+## Server-only secrets
+
+- **`SUPABASE_SERVICE_ROLE_KEY` remains server-only** — referenced only in `src/lib/supabaseAdmin.ts`, imported only by `/api/admin/*` routes, and never exposed with a `NEXT_PUBLIC_` prefix.
+- The client data layer uses `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` only.
+- This preserves the RLS bypass needed for admin writes while keeping the service key off the client.
+
+## Backend route naming
+
+- The admin UI lives at `/manage`; `/admin` is intentionally hidden with a 404 to reduce discoverability.
+- Public links should reference `/manage` only for internal users, and no public nav/footer/sitemap links should point to the admin surface.
 
 ## Database decisions
 

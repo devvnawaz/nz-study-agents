@@ -5,9 +5,14 @@ import { getSupabaseAdmin } from '@/lib/supabaseAdmin';
 import type { Representation, AuthorizationStatus } from '@/lib/types';
 import { readStore, writeStore } from '@/lib/store';
 import { revalidatePaths } from '@/lib/revalidate';
+import { rateLimit } from '@/lib/rateLimit';
+
+const RATE_LIMIT_WINDOW_MS = 60_000;
+const RATE_LIMIT_MAX = 60;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (!checkAdminToken(req, res)) return;
+  if (!rateLimit(req, res, { windowMs: RATE_LIMIT_WINDOW_MS, max: RATE_LIMIT_MAX, prefix: 'admin:representations' })) return;
 
   if (req.method === 'GET') {
     if (!isSupabaseConfigured) {

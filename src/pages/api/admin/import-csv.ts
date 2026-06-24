@@ -5,6 +5,10 @@ import { isSupabaseConfigured } from '@/lib/supabase';
 import type { Agency, Institute, InstituteType, Representation } from '@/lib/types';
 import { readStore, writeStore } from '@/lib/store';
 import { revalidatePaths } from '@/lib/revalidate';
+import { rateLimit } from '@/lib/rateLimit';
+
+const RATE_LIMIT_WINDOW_MS = 60_000;
+const RATE_LIMIT_MAX = 60;
 import {
   cleanOptionalText,
   cleanText,
@@ -67,6 +71,7 @@ function uniqueRepresentationKey(row: CsvImportRow): string {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (!checkAdminToken(req, res)) return;
+  if (!rateLimit(req, res, { windowMs: RATE_LIMIT_WINDOW_MS, max: RATE_LIMIT_MAX, prefix: 'admin:import-csv' })) return;
 
   if (req.method === 'GET') {
     return responseTemplate(res);

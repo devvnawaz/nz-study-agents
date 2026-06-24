@@ -1,12 +1,12 @@
 # PROJECT_STATE.md
 
-_Last updated: 2026-06-18 — post CSV Importer + footer edit handoff._
+_Last updated: 2026-06-24 — admin route security hardening._
 
 ## Current project status
 
 The NZ Study Agent Directory is built, deployed, connected to Supabase, and under
-GitHub/Vercel workflow. Feature work is paused after completing and pushing the
-CSV Importer feature and removing the public Admin link from the footer.
+GitHub/Vercel workflow. Recent work includes data import workflow improvements,
+public interview-question content, and admin-route security hardening.
 
 - Branch: `main`
 - Remote: `origin` → `https://github.com/devvnawaz/nz-study-agents.git`
@@ -40,11 +40,23 @@ A bulk CSV importer was added to the existing admin panel.
   to `authorized`.
 - If address/notes contain commas, the CSV cell must be quoted.
 
-## Footer link edit
+## Admin route security hardening (2026-06-24)
 
-The visible **Admin** link was removed from the public footer. No other public
-`/admin` links were found outside the admin page itself. The `/admin` route remains
-available directly for authorized users.
+- The admin page moved from `/admin` to **`/manage`** (`src/pages/manage/index.tsx`).
+- **`/admin` now returns 404** via `getServerSideProps` `{ notFound: true }`
+  (`src/pages/admin/index.tsx`) to reduce accidental discovery of the admin surface.
+- No public links to `/admin` or `/manage` exist in navbar, footer, or any sitemap
+  (there is no sitemap/robots file). The earlier footer Admin link was already removed.
+- The token-gate **"Try dev in demo mode" hint is hidden in production** — the demo
+  hint text, placeholder, and footer note only render when `NODE_ENV === 'development'`.
+- **Basic per-IP rate limiting** added to all `/api/admin/*` routes via
+  `src/lib/rateLimit.ts` (in-memory, 60 requests/min/IP per route, returns HTTP 429
+  with `Retry-After`). Keyed by `x-forwarded-for` (Vercel) with socket-address fallback.
+- **`ADMIN_TOKEN` auth is unchanged** (still `x-admin-token` via `adminAuth.ts`).
+- **`SUPABASE_SERVICE_ROLE_KEY` confirmed server-only**: referenced only in
+  `src/lib/supabaseAdmin.ts`, imported only by `/api/admin/*` routes, never prefixed
+  `NEXT_PUBLIC_`, never sent to the client.
+- No database schema changes. Supabase Auth intentionally not added yet.
 
 ## Current deployment / Git status
 

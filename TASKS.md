@@ -1,6 +1,6 @@
 # TASKS.md
 
-_Last updated: 2026-06-18 (post CSV Importer handoff)._
+_Last updated: 2026-06-24 (admin route security hardening)._
 
 ## Done
 - Scaffold Next.js 14 + TypeScript + Tailwind (manual).
@@ -8,7 +8,7 @@ _Last updated: 2026-06-18 (post CSV Importer handoff)._
 - Supabase schema (`supabase/schema.sql`) with tables + indexes + RLS.
 - Public pages: home/search, institutes list + detail, agencies list + detail,
   about, report form, 404.
-- Admin panel `/admin` (token gate + Agencies/Institutes/Links/Reports tabs).
+- Admin panel `/manage` (token gate + Agencies/Institutes/Links/Reports tabs); `/admin` now 404s.
 - Admin API routes `/api/admin/*` + public `/api/reports`.
 - Deployment-readiness reviews (all green).
 - Git initial commit + remote (github.com/devvnawaz/nz-study-agents).
@@ -20,6 +20,8 @@ _Last updated: 2026-06-18 (post CSV Importer handoff)._
   Tested locally in demo mode (create + duplicate-skip verified). Pushed in `8a02aa2`.
 - **Footer edit** — removed public Admin link from footer; confirmed no other public
   admin entry points. Pushed in `8a02aa2`.
+- **Interview Questions page** — `/interview-questions` with grouped sample visa interview questions; linked from navbar.
+- **Admin security hardening** — admin page moved to `/manage`, `/admin` now 404s, dev-mode token hint hidden in production, and basic rate limiting added to `/api/admin/*` routes.
 
 ## In progress
 - (none — feature work paused for context/memory handoff.)
@@ -29,6 +31,13 @@ _Last updated: 2026-06-18 (post CSV Importer handoff)._
    (1 institute + 1 agency + 1 source URL; confirm created, then public page renders).
 2. **Real data collection / import** from verified official institute agent pages,
    replacing placeholder "(DEMO)" data.
+
+## Security hardening (2026-06-24)
+- Admin panel route moved from `/admin` to `/manage`; `/admin` now returns 404.
+- Production no longer shows the local demo token hint.
+- Basic in-memory rate limiting added to `/api/admin/*` routes.
+- `SUPABASE_SERVICE_ROLE_KEY` remains server-only and is only imported from API routes.
+- No public links to `/admin` or `/manage` exist in the navbar/footer/sitemap.
 
 ## CSV importer follow-ups
 - Optional: support updating existing representation links (currently skip-only).

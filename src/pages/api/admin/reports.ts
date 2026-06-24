@@ -3,9 +3,14 @@ import { checkAdminToken } from '@/lib/adminAuth';
 import { isSupabaseConfigured } from '@/lib/supabase';
 import { getSupabaseAdmin } from '@/lib/supabaseAdmin';
 import { readStore, writeStore } from '@/lib/store';
+import { rateLimit } from '@/lib/rateLimit';
+
+const RATE_LIMIT_WINDOW_MS = 60_000;
+const RATE_LIMIT_MAX = 60;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (!checkAdminToken(req, res)) return;
+  if (!rateLimit(req, res, { windowMs: RATE_LIMIT_WINDOW_MS, max: RATE_LIMIT_MAX, prefix: 'admin:reports' })) return;
 
   if (req.method === 'GET') {
     if (!isSupabaseConfigured) {
