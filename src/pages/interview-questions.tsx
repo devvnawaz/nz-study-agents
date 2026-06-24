@@ -17,6 +17,9 @@ const groups: QuestionGroup[] = [
       'What is your contact number?',
       'What is your application number?',
       'What is your client number?',
+      "What is your father's name?",
+      "What is your mother's name?",
+      "What are your parents' dates of birth and passport numbers?",
       'When did you submit your visa application?',
       'Which course have you applied for?',
       'Which institute have you applied to?',
@@ -99,6 +102,7 @@ const groups: QuestionGroup[] = [
     category: 'Financial Support and Sponsorship',
     items: [
       'Who will sponsor your education?',
+      'What is the relationship between you and your sponsor?',
       'What does your sponsor do?',
       "What is your sponsor's income?",
       'How will you pay your tuition fees?',
