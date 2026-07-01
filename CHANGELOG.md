@@ -19,6 +19,7 @@ Format is loosely based on Keep a Changelog. Dates are YYYY-MM-DD.
     exact normalized name; can create missing institutes/agencies; skips duplicate links;
     works in both demo (file-store) and Supabase modes.
 - **Visa Interview Questions** page at `/interview-questions` with grouped sample student visa interview questions, linked from the navbar.
+- **Student Visa FAQ** page at `/faq` with grouped New Zealand student visa questions for Bangladeshi students, cautious general-information answers, and official source links.
 
 ### Changed
 - **Footer:** removed the public **Admin** link (`src/components/Footer.tsx`,
@@ -26,6 +27,7 @@ Format is loosely based on Keep a Changelog. Dates are YYYY-MM-DD.
   public site.
 - **Admin route hardening:** the admin panel moved from `/admin` to `/manage`; `/admin` now returns 404. Production no longer shows the demo-mode token hint, and a lightweight in-memory rate limit was added to `/api/admin/*` routes.
 - **Interview Questions navigation:** moved the page link into the top navbar next to About.
+- **Navigation/footer:** added a public FAQ link to the site navigation and footer.
 - **About page:** Credits section scaffold was added and later removed; no remaining user-facing change.
 
 ## [0.1.0] - 2026-06-17

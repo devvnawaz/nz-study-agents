@@ -1,6 +1,6 @@
 # PROJECT_STATE.md
 
-_Last updated: 2026-06-24 — admin route security hardening._
+_Last updated: 2026-07-01 — student visa FAQ page added._
 
 ## Current project status
 
@@ -75,6 +75,12 @@ A bulk CSV importer was added to the existing admin panel.
 - Local demo mode uses `.data/store.json`, which is ignored and should not be committed.
 
 ## Files changed recently
+
+FAQ update (uncommitted at the time of this handoff) changed:
+
+- `src/pages/faq.tsx` — new FAQ page with accordion sections, disclaimer, and source links.
+- `src/components/Navbar.tsx` — added FAQ to the desktop/mobile navigation.
+- `src/components/Footer.tsx` — added FAQ to the quick links.
 
 CSV Importer/footer commit `8a02aa2` changed:
 

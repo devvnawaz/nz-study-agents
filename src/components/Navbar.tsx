@@ -5,6 +5,7 @@ const NAV_LINKS = [
   { href: '/institutes', label: 'Institutes' },
   { href: '/agencies', label: 'Agencies' },
   { href: '/about', label: 'About' },
+  { href: '/faq', label: 'FAQ' },
   { href: '/interview-questions', label: 'Interview Questions' },
 ];
 

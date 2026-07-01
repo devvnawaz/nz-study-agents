@@ -12,7 +12,7 @@ export default function Footer() {
               <span className="font-bold text-gray-900 text-sm">Study Agent Directory — Bangladesh</span>
             </span>
             <p className="text-xs text-gray-500 leading-relaxed">
-              A free, community-maintained directory of authorized New Zealand education agents in Bangladesh.
+              A free directory of authorized New Zealand education agents in Bangladesh, created by students for students.
             </p>
           </div>
 
@@ -24,6 +24,7 @@ export default function Footer() {
                 { href: '/institutes', label: 'Browse Institutes' },
                 { href: '/agencies', label: 'Browse Agencies' },
                 { href: '/report', label: 'Report Outdated Info' },
+                { href: '/faq', label: 'Student Visa FAQ' },
                 { href: '/about', label: 'About this Directory' },
               ].map((l) => (
                 <li key={l.href}>

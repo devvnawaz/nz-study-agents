@@ -24,12 +24,14 @@ _Last updated: 2026-06-24 (admin route security hardening)._
 - **Admin security hardening** — admin page moved to `/manage`, `/admin` now 404s, dev-mode token hint hidden in production, and basic rate limiting added to `/api/admin/*` routes.
 
 ## In progress
-- (none — feature work paused for context/memory handoff.)
+- **Student visa FAQ page** — `/faq` with disclaimer, grouped FAQs, source links, and nav/footer links.
 
 ## Next
-1. **Production CSV import smoke test** with the real `ADMIN_TOKEN`
+1. Review the new FAQ page locally.
+2. Commit and push the FAQ update if the content/UI looks good.
+3. **Production CSV import smoke test** with the real `ADMIN_TOKEN`
    (1 institute + 1 agency + 1 source URL; confirm created, then public page renders).
-2. **Real data collection / import** from verified official institute agent pages,
+4. **Real data collection / import** from verified official institute agent pages,
    replacing placeholder "(DEMO)" data.
 
 ## Security hardening (2026-06-24)
