@@ -25,6 +25,7 @@ export default function Footer() {
                 { href: '/agencies', label: 'Browse Agencies' },
                 { href: '/report', label: 'Report Outdated Info' },
                 { href: '/faq', label: 'Student Visa FAQ' },
+                { href: '/cost-calculator', label: 'Cost Calculator' },
                 { href: '/about', label: 'About this Directory' },
               ].map((l) => (
                 <li key={l.href}>

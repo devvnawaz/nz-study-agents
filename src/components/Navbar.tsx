@@ -6,6 +6,7 @@ const NAV_LINKS = [
   { href: '/agencies', label: 'Agencies' },
   { href: '/about', label: 'About' },
   { href: '/faq', label: 'FAQ' },
+  { href: '/cost-calculator', label: 'Cost Calculator' },
   { href: '/interview-questions', label: 'Interview Questions' },
 ];
 
