@@ -8,14 +8,35 @@ interface InstituteCardProps {
   agencyCount?: number;
 }
 
+const INSTITUTE_IMAGE_IDS = new Set([
+  'inst-aut',
+  'inst-eit',
+  'inst-lincoln',
+]);
+
 export default function InstituteCard({ institute, agencyCount }: InstituteCardProps) {
+  const imageSrc = INSTITUTE_IMAGE_IDS.has(institute.id)
+    ? `/images/institutes/${institute.id}.webp`
+    : null;
+
   return (
     <Link
       href={`/institutes/${institute.id}`}
       className="group flex flex-col overflow-hidden rounded-2xl border border-ink-200/70 bg-white shadow-card transition hover:-translate-y-0.5 hover:shadow-card-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2"
     >
-      {/* Image header (decorative gradient + type icon) */}
+      {/* Image header */}
       <div className={`relative h-36 bg-gradient-to-br ${getTypeGradient(institute.type)}`}>
+        {imageSrc && (
+          <>
+            <img
+              src={imageSrc}
+              alt=""
+              className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+              loading="lazy"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-ink-950/35 via-ink-950/5 to-transparent" />
+          </>
+        )}
         <span className="absolute right-3 top-3 inline-flex items-center rounded-full bg-white/90 px-2.5 py-1 text-xs font-semibold text-ink-700 shadow-sm backdrop-blur">
           {institute.type}
         </span>
