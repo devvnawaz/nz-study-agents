@@ -3,32 +3,70 @@
 All notable changes to this project are recorded here.
 Format is loosely based on Keep a Changelog. Dates are YYYY-MM-DD.
 
-## [Unreleased]
+## [2026-07-08]
+
+### Changed
+- **Full visual redesign** (commit `2914959`, navy + teal theme, based on the user's reference design):
+  - New Tailwind tokens `ink` (navy) and `accent` (teal); new shared classes
+    (`.btn-primary` teal, `.btn-dark`, `.input`, `.select`, `.alert-info/-warning`).
+  - Dark navy sticky header and dark footer on all pages.
+  - Homepage hero: badge, "Your Path to New Zealand Starts Here" (teal highlight),
+    stats row, optional photo backdrop with SVG-mountain fallback
+    (`src/components/HeroBackdrop.tsx`, `public/images/README.md`), and a floating
+    search card overlapping the hero.
+  - Modern institute cards with gradient "image" headers + SVG type icons.
+  - New shared components: `PageHeader`, `Alert`, `icons.tsx` (inline SVG icon set).
+  - All public pages restyled (home, institutes, institute detail, agencies, agency
+    detail, FAQ incl. category jump list, interview questions as category cards,
+    cost calculator, report form, about, 404). Logic, routes, and data untouched.
+  - Admin `/manage` intentionally not restyled.
+
+## Committed history
+
+## [2026-07-01 → 2026-07-06]
+
+### Added
+- **Student Visa FAQ** page at `/faq` (commit `d2b8f56`) — 9 grouped categories,
+  cautious general-information answers, official source links, disclaimer.
+- **Study Cost Calculator** at `/cost-calculator` (commit `28bd4f3`) — tuition,
+  scholarship, duration chips, living cost, one-time expenses; NZD + BDT results;
+  **Frankfurter API v2** exchange-rate fetch (`/v2/rate/NZD/BDT`, client-side,
+  no key) with manual override and refresh button; official source links.
+- **Institutes page disclaimer** (commit `fc86a8c`) — "Can't find your preferred
+  institution?" section + 18 "Institutions checked so far" links on `/institutes`.
+- **Mobile navigation** (commit `fd250b6`) — hamburger menu below `md` with
+  accessible toggle (`aria-expanded`), closing on link tap.
+
+### Changed
+- **Rebrand** (commit `be88875`) — site renamed from "NZ Study Agent Directory —
+  Bangladesh" to **"New Zealand Study Planner - Bangladesh"** (short: "NZ Study
+  Planner"); homepage hero/metadata/OG tags updated; footer credit "Developed by
+  devnawaz" (LinkedIn) added; directory wording kept for the directory feature.
+- **Navigation/footer:** FAQ and Cost Calculator links added to navbar and footer.
+- Footer description updated to "…created by students for students." then to the
+  planner positioning during the rebrand.
+
+## [2026-06-18 → 2026-06-24]
 
 ### Added
 - **CSV Importer** for bulk-loading directory data (commit `8a02aa2`).
-  - New token-gated API endpoint `src/pages/api/admin/import-csv.ts` (GET returns a
+  - Token-gated API endpoint `src/pages/api/admin/import-csv.ts` (GET returns a
     CSV template; POST imports CSV content).
-  - New **CSV Import** tab in the admin panel (`src/pages/admin/index.tsx`) with
-    file upload or paste, template download, and a per-row results summary
-    (created / updated / skipped / errors).
-  - New parsing/validation helpers and types in `src/lib/csvImport.ts`.
-  - New spreadsheet template `templates/csv-import-template.csv`.
-  - README documentation for the importer.
-  - Behavior: one row = one institute-agency link; matches existing records by id or
-    exact normalized name; can create missing institutes/agencies; skips duplicate links;
-    works in both demo (file-store) and Supabase modes.
-- **Visa Interview Questions** page at `/interview-questions` with grouped sample student visa interview questions, linked from the navbar.
-- **Student Visa FAQ** page at `/faq` with grouped New Zealand student visa questions for Bangladeshi students, cautious general-information answers, and official source links.
+  - **CSV Import** tab in the admin panel with file upload or paste, template
+    download, and per-row results (created / updated / skipped / errors).
+  - Parsing/validation helpers in `src/lib/csvImport.ts`; template
+    `templates/csv-import-template.csv`; README documentation.
+  - Behavior: one row = one institute-agency link; matches by id or exact
+    normalized name; creates missing records; skips duplicate links; works in
+    demo (file-store) and Supabase modes.
+- **Visa Interview Questions** page at `/interview-questions` with grouped sample
+  student visa interview questions, linked from the navbar.
 
 ### Changed
-- **Footer:** removed the public **Admin** link (`src/components/Footer.tsx`,
-  commit `8a02aa2`). The `/admin` route still exists but is no longer linked from the
-  public site.
-- **Admin route hardening:** the admin panel moved from `/admin` to `/manage`; `/admin` now returns 404. Production no longer shows the demo-mode token hint, and a lightweight in-memory rate limit was added to `/api/admin/*` routes.
-- **Interview Questions navigation:** moved the page link into the top navbar next to About.
-- **Navigation/footer:** added a public FAQ link to the site navigation and footer.
-- **About page:** Credits section scaffold was added and later removed; no remaining user-facing change.
+- **Footer:** removed the public **Admin** link (commit `8a02aa2`).
+- **Admin route hardening (2026-06-24):** admin panel moved from `/admin` to
+  `/manage`; `/admin` now returns 404; production no longer shows the demo-mode
+  token hint; lightweight in-memory rate limiting added to `/api/admin/*` routes.
 
 ## [0.1.0] - 2026-06-17
 

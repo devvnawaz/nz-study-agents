@@ -1,6 +1,59 @@
 # DECISIONS.md
 
-_Architectural and process decisions, with rationale. Last updated 2026-06-17._
+_Architectural, product, and process decisions, with rationale. Last updated 2026-07-08._
+
+## Product / branding decisions (2026-07-01 → 2026-07-08)
+
+- **Rebrand (2026-07-06, commit `be88875`)** — the site was rebranded from an
+  agent directory ("NZ Study Agent Directory - Bangladesh") to a broader helper:
+  **"New Zealand Study Planner - Bangladesh"**. Rationale: the site now includes
+  FAQ, interview questions, and a cost calculator, with more features planned.
+- **Directory name preserved for the feature** — "NZ Study Agent Directory -
+  Bangladesh" is used ONLY when referring to the agent-directory feature itself;
+  never as the site name.
+- **Short name in tight UI spaces** — use "NZ Study Planner" (header logo,
+  `og:site_name`, mobile).
+- **Unofficial, student-friendly, trust-first** — the site stays free and
+  community-oriented; it is never positioned as immigration advice, and cautious
+  wording ("generally", "may", "check the official source") is mandatory on
+  FAQ/calculator/interview content. Trust-first positioning is preferred over any
+  marketplace/review-style positioning (no ratings, no agency self-submissions).
+- **Cost calculator is estimate-only** — no guarantee amounts will satisfy
+  Immigration New Zealand; formula and disclaimers stay visible on the page.
+- **Exchange rate is approximate and editable** — auto-fetched from Frankfurter v2
+  client-side (no key needed), but the field is always manually editable and the
+  calculator never blocks if the API fails.
+- **No login/account features** — do not add auth for public users unless a real
+  need emerges. The reference design's "Log in / Get Started" buttons were
+  deliberately replaced with real actions (Report Outdated Info / Start Searching).
+- **Developer credit** — footer credits "devnawaz" linking to
+  https://www.linkedin.com/in/devnawaz/.
+
+## Redesign decisions (2026-07-08)
+
+- **Visual direction** — dark navy (`ink` scale) base with teal (`accent` scale)
+  actions, from the user's reference screenshot: navy header/hero/footer, large
+  hero typography with "New Zealand" highlighted in teal, floating search card
+  overlapping the hero, modern rounded cards with soft shadows.
+- **Tokens added, not replaced** — `accent` and `ink` scales were added to
+  `tailwind.config.js`; legacy `brand`/`nz` tokens remain so old classes never break.
+- **Hero image strategy** — the hero references optional `/images/hero-nz.jpg`
+  under a navy gradient overlay, with an inline SVG mountain silhouette fallback
+  (`HeroBackdrop.tsx`). Rationale: no suitable local asset existed and remote
+  image URLs were ruled out as fragile; the page must look finished without the photo.
+- **Institute card "images" are CSS gradients + SVG icons** — per-type gradient
+  headers (`getTypeGradient`) instead of stock photos: consistent, zero binary
+  assets, no licensing risk. Real campus photos can replace them later.
+- **Icons: inline SVG set** (`src/components/icons.tsx`) replaces emoji iconography
+  in redesigned surfaces — crisper and stylable; no icon library dependency.
+- **Shared building blocks** — `PageHeader` (navy inner-page band) and `Alert`
+  (info/warning with icon circle) were extracted because disclaimers and page
+  headers repeat on nearly every page.
+- **Flat nav kept (no dropdown)** — six links + CTA, collapsing to the hamburger
+  below `lg`; a "Resources" dropdown was considered and rejected to avoid
+  accessibility complexity.
+- **Admin `/manage` intentionally NOT restyled** — internal tool, out of redesign
+  scope; keep functional.
 
 ## Stack decisions
 

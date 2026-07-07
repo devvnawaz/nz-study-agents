@@ -1,125 +1,90 @@
 # PROJECT_STATE.md
 
-_Last updated: 2026-07-01 — student visa FAQ page added._
+_Source of truth for the current project state. Last updated: 2026-07-08 — full visual redesign committed (`2914959`)._
 
-## Current project status
+## Identity
 
-The New Zealand Study Planner - Bangladesh is built, deployed, connected to Supabase, and under
-GitHub/Vercel workflow. Recent work includes data import workflow improvements,
-public interview-question content, and admin-route security hardening.
+- **Live domain:** https://www.nzstudy.help/ (Vercel deployment; also reachable at nz-study-agents.vercel.app)
+- **Brand (full):** New Zealand Study Planner - Bangladesh
+- **Brand (short UI name):** NZ Study Planner
+- **Agent directory feature name:** NZ Study Agent Directory - Bangladesh (use only when referring to the directory feature)
+- **Audience:** Bangladeshi students planning to study in New Zealand
+- **Positioning:** free, unofficial, student-friendly, trust-first. Not immigration advice; not affiliated with any NZ government body, institute, or agency.
 
-- Branch: `main`
-- Remote: `origin` → `https://github.com/devvnawaz/nz-study-agents.git`
-- Latest commit: `8a02aa2 Add CSV importer and remove Admin link from footer`
-- Working tree before this handoff update: clean
-- Production URL: https://nz-study-agents.vercel.app
+## Git status
 
-## Latest completed feature: CSV Importer
+- Branch: `main`; remote `origin` → https://github.com/devvnawaz/nz-study-agents.git
+- Latest commit: `2914959` — "Redesign UI with navy and teal theme". `npm run build` passes.
+- Untracked (intentionally not committed): `architecture-summary.pdf` — a generated
+  doc for the user, not a repo asset. `tsconfig.tsbuildinfo` may reappear after
+  local type checks; delete it rather than committing it.
 
-A bulk CSV importer was added to the existing admin panel.
+## Current features
 
-### What it does
+1. **Institute directory** — `/institutes` list + `/institutes/[id]` detail with
+   authorized agents, source links, last-verified dates; client-side search/type/city filter.
+2. **Agencies** — `/agencies` list + `/agencies/[id]` detail (contacts, institutes represented).
+3. **Student Visa FAQ** — `/faq`, 9 categories, `<details>` accordions, official source links.
+4. **Interview questions** — `/interview-questions`, 11 grouped categories.
+5. **Cost calculator** — `/cost-calculator`; tuition/scholarship/duration/living/one-time inputs;
+   NZD + BDT results; **Frankfurter API v2** (`https://api.frankfurter.dev/v2/rate/NZD/BDT`)
+   fetched client-side with manual-edit + refresh fallback.
+6. **Report outdated info** — `/report` form → POST `/api/reports` (basic validation only).
+7. **About** — `/about`.
+8. **Admin** — `/manage` (token gate, Agencies/Institutes/Links/CSV Import/Reports tabs);
+   `/admin` returns 404; `/api/admin/*` token-gated + in-memory rate limited.
 
-- Adds `/api/admin/import-csv` as a token-gated server-side import endpoint.
-- Adds a **CSV Import** tab to `/admin`.
-- Supports uploading or pasting CSV content.
-- Provides a CSV template download in the UI.
-- Adds a repo template at `templates/csv-import-template.csv`.
-- Adds row-by-row import results: created / skipped / updated / errors.
-- Works in local demo/file-store mode and Supabase production mode.
+## Tech stack (verified against code)
 
-### Import behavior
+- Next.js 14.2.5, Pages Router, React 18, TypeScript strict, Tailwind CSS 3.
+- Data layer `src/lib/data.ts` — dual mode: Supabase (production) or local JSON
+  file-store `.data/store.json` (demo/dev, seeded from `src/lib/seed.ts`).
+- Supabase schema `supabase/schema.sql`: `institutes`, `agencies`, `representations`,
+  `reports` + RLS (public SELECT on directory tables, public INSERT on reports).
+- ISR: `revalidate: 3600`; dynamic detail pages `fallback: 'blocking'`.
+- `@vercel/analytics` in `_app.tsx`. No other runtime deps.
 
-- One CSV row = one institute-agency representation link.
-- Required fields: `institute_name`, `agency_name`, `agency_city`, `source_url`.
-- Existing institutes/agencies are matched by explicit ID if provided, otherwise
-  by exact case-insensitive name.
-- Missing institutes/agencies can be created.
-- Duplicate representation links are skipped.
-- `authorization_status` accepts `authorized`, `unverified`, or `expired`; defaults
-  to `authorized`.
-- If address/notes contain commas, the CSV cell must be quoted.
+## Deployment approach
 
-## Admin route security hardening (2026-06-24)
+- Vercel auto-deploys `main` on push to GitHub. Env vars managed by the user in the
+  Vercel dashboard (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`,
+  `SUPABASE_SERVICE_ROLE_KEY`, `ADMIN_TOKEN`). Never add or change them via tooling.
 
-- The admin page moved from `/admin` to **`/manage`** (`src/pages/manage/index.tsx`).
-- **`/admin` now returns 404** via `getServerSideProps` `{ notFound: true }`
-  (`src/pages/admin/index.tsx`) to reduce accidental discovery of the admin surface.
-- No public links to `/admin` or `/manage` exist in navbar, footer, or any sitemap
-  (there is no sitemap/robots file). The earlier footer Admin link was already removed.
-- The token-gate **"Try dev in demo mode" hint is hidden in production** — the demo
-  hint text, placeholder, and footer note only render when `NODE_ENV === 'development'`.
-- **Basic per-IP rate limiting** added to all `/api/admin/*` routes via
-  `src/lib/rateLimit.ts` (in-memory, 60 requests/min/IP per route, returns HTTP 429
-  with `Retry-After`). Keyed by `x-forwarded-for` (Vercel) with socket-address fallback.
-- **`ADMIN_TOKEN` auth is unchanged** (still `x-admin-token` via `adminAuth.ts`).
-- **`SUPABASE_SERVICE_ROLE_KEY` confirmed server-only**: referenced only in
-  `src/lib/supabaseAdmin.ts`, imported only by `/api/admin/*` routes, never prefixed
-  `NEXT_PUBLIC_`, never sent to the client.
-- No database schema changes. Supabase Auth intentionally not added yet.
+## Design direction (redesign committed 2026-07-08, `2914959`)
 
-## Current deployment / Git status
+- Reference: user screenshot "New Design I want to Achieve.png" (dark navy + teal).
+- Tokens: `ink` (navy/slate) + `accent` (teal) added in `tailwind.config.js`;
+  legacy `brand`/`nz` kept for compatibility. Shared classes in `globals.css`
+  (`.btn-primary` teal, `.btn-dark`, `.input`, `.select`, `.alert-*`, `.card`).
+- Dark navy sticky header + dark footer on all pages; homepage hero with badge,
+  "Your Path to **New Zealand** Starts Here", stats row, floating search card
+  overlapping the hero; modern institute cards with gradient "image" headers +
+  SVG type icons; `PageHeader` navy band on inner pages; `Alert` component for
+  disclaimers; inline SVG icon set (`src/components/icons.tsx`) replacing emoji.
+- **Hero photo:** optional `public/images/hero-nz.jpg` (see `public/images/README.md`);
+  falls back to navy gradient + SVG mountain silhouette (`HeroBackdrop.tsx`).
+  The user has not yet supplied the photo.
 
-- CSV Importer + footer edit were committed and pushed in commit `8a02aa2`.
-- Vercel is expected to auto-deploy from GitHub on push.
-- `main` was up to date with `origin/main` before this memory-only handoff update.
-- The Vercel project directory is ignored via `.vercel` (commit `308f973`).
+## Known limitations / cautions
 
-## Current Supabase / Vercel status
+- Public `/api/reports` has **no spam protection** (no CAPTCHA/rate limit) — only
+  required-message validation. Known gap; do not fake protection.
+- No sitemap.xml, robots.txt, or structured data yet.
+- Branding strings are repeated across pages (no central site config).
+- Production Supabase holds real data (user-confirmed 2026-07-08). Any remaining
+  "(DEMO)"-labelled seed entries are placeholders; never invent data.
+- CSV importer matches by exact normalized name; create-or-skip only (no update).
+- npm audit warnings exist from the `@vercel/analytics` install (unaddressed).
+- Production admin actions need the user's real `ADMIN_TOKEN` — never request or log it.
+- `src/pages/manage/index.tsx` (~785 lines) is the most complex file; it was NOT
+  restyled in the redesign (deliberately out of scope).
 
-- Vercel production environment variables were configured by the user; do not add
-  or re-add them unless explicitly asked.
-- Supabase `schema.sql` was run by the user; tables and RLS exist.
-- Production was previously verified to be in Supabase mode (no demo banner; public
-  pages 200; admin API 401 without/wrong token).
-- Local demo mode uses `.data/store.json`, which is ignored and should not be committed.
+## Exact next task
 
-## Files changed recently
-
-FAQ update (uncommitted at the time of this handoff) changed:
-
-- `src/pages/faq.tsx` — new FAQ page with accordion sections, disclaimer, and source links.
-- `src/components/Navbar.tsx` — added FAQ to the desktop/mobile navigation.
-- `src/components/Footer.tsx` — added FAQ to the quick links.
-
-CSV Importer/footer commit `8a02aa2` changed:
-
-- `README.md` — CSV importer documentation.
-- `src/components/Footer.tsx` — removed footer Admin link.
-- `src/lib/csvImport.ts` — CSV parsing, template, validation helpers, import summary types.
-- `src/pages/admin/index.tsx` — added CSV Import tab and UI.
-- `src/pages/api/admin/import-csv.ts` — server-side token-gated import endpoint.
-- `templates/csv-import-template.csv` — spreadsheet template.
-
-Additional relevant prior commits:
-
-- `8969309` / PR merge `dfc5676` — Vercel Web Analytics installed; `_app.tsx`
-  imports `@vercel/analytics/next`.
-- `308f973` — `.vercel` ignored.
-- `5b4520e` — initial project memory files.
-
-## Known issues / cautions
-
-- Production data may still be empty unless the user imported or entered real data.
-- Seed/demo agencies are placeholders and must not be treated as verified real data.
-- CSV importer currently matches existing agencies/institutes by exact normalized name;
-  spelling differences create new rows.
-- The importer skips duplicate institute-agency links; it does not update existing
-  representation records.
-- Production admin API requires the user's real `ADMIN_TOKEN`; do not ask for or log it.
-- Local smoke tests may create `.data/store.json`; remove `.data/` after testing.
-- `npm install @vercel/analytics` introduced npm audit warnings reported earlier
-  (2 low, 1 moderate, 1 critical). No remediation has been performed yet.
-
-## Exact next recommended task
-
-Run a **production CSV importer smoke test** using the real admin token:
-
-1. Open `https://nz-study-agents.vercel.app/admin`.
-2. Log in with `ADMIN_TOKEN`.
-3. Use **CSV Import** with a small verified CSV containing 1 institute + 1 agency + 1 source URL.
-4. Confirm result shows `created: 1`, `errors: 0`.
-5. Wait for ISR or redeploy, then confirm the public institute page shows the imported agency.
-6. If satisfied, begin real data collection/import from verified institute source pages.
-
-Do not build new features until production import is verified with real data.
+1. Verify the deployed redesign on https://www.nzstudy.help/ after the Vercel deploy.
+2. Optional: user supplies `public/images/hero-nz.jpg` for the photo hero
+   (spec in `public/images/README.md`; falls back to SVG mountains until then).
+3. Ongoing data upkeep: keep agent listings verified against official institute
+   pages via the CSV importer in `/manage`.
+4. Next feature-quality tasks (see TASKS.md): report-form spam protection,
+   robots.txt/sitemap, privacy policy.
