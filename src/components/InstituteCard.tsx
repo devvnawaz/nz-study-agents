@@ -8,16 +8,29 @@ interface InstituteCardProps {
   agencyCount?: number;
 }
 
-const INSTITUTE_IMAGE_IDS = new Set([
-  'inst-aut',
-  'inst-eit',
-  'inst-lincoln',
-]);
+const INSTITUTE_IMAGE_BY_ID: Record<string, string> = {
+  'inst-aut': 'inst-aut',
+  'inst-eit': 'inst-eit',
+  'inst-lincoln': 'inst-lincoln',
+};
+
+const INSTITUTE_IMAGE_BY_NAME: Record<string, string> = {
+  'auckland university of technology': 'inst-aut',
+  'eastern institute of technology': 'inst-eit',
+  'eit': 'inst-eit',
+  'lincoln university': 'inst-lincoln',
+};
+
+function getInstituteImageSrc(institute: Institute): string | null {
+  const imageName =
+    INSTITUTE_IMAGE_BY_ID[institute.id] ??
+    INSTITUTE_IMAGE_BY_NAME[institute.name.trim().toLowerCase()];
+
+  return imageName ? `/images/institutes/${imageName}.webp` : null;
+}
 
 export default function InstituteCard({ institute, agencyCount }: InstituteCardProps) {
-  const imageSrc = INSTITUTE_IMAGE_IDS.has(institute.id)
-    ? `/images/institutes/${institute.id}.webp`
-    : null;
+  const imageSrc = getInstituteImageSrc(institute);
 
   return (
     <Link
