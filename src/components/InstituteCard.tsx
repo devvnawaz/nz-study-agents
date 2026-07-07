@@ -21,10 +21,25 @@ const INSTITUTE_IMAGE_BY_NAME: Record<string, string> = {
   'lincoln university': 'inst-lincoln',
 };
 
+function normalizeInstituteName(name: string): string {
+  return name
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 function getInstituteImageSrc(institute: Institute): string | null {
+  const normalizedName = normalizeInstituteName(institute.name);
   const imageName =
     INSTITUTE_IMAGE_BY_ID[institute.id] ??
-    INSTITUTE_IMAGE_BY_NAME[institute.name.trim().toLowerCase()];
+    INSTITUTE_IMAGE_BY_NAME[normalizedName] ??
+    (normalizedName.includes('auckland university of technology') ? 'inst-aut' : null) ??
+    (normalizedName.includes('eastern institute of technology') || normalizedName.includes('eit')
+      ? 'inst-eit'
+      : null) ??
+    (normalizedName.includes('lincoln university') ? 'inst-lincoln' : null);
 
   return imageName ? `/images/institutes/${imageName}.webp` : null;
 }
