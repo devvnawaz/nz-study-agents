@@ -38,7 +38,7 @@ export default function InstitutesPage({ institutes, agencyCounts, demoMode }: I
   return (
     <>
       <Head>
-        <title>All Institutes — NZ Study Agent Directory</title>
+        <title>All Institutes — New Zealand Study Planner - Bangladesh</title>
         <meta name="description" content="Browse all New Zealand institutes and find their authorized agents in Bangladesh." />
       </Head>
       <Layout>

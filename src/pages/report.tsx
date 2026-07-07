@@ -40,7 +40,7 @@ export default function ReportPage() {
   return (
     <>
       <Head>
-        <title>Report Outdated Info — NZ Study Agent Directory</title>
+        <title>Report Outdated Info — New Zealand Study Planner - Bangladesh</title>
       </Head>
       <Layout>
         <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6 lg:px-8">

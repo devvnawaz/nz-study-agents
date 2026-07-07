@@ -23,8 +23,8 @@ export default function Navbar() {
             NZ
           </span>
           <span className="hidden font-bold text-gray-900 sm:block leading-tight">
-            Study Agent<br />
-            <span className="text-xs font-normal text-gray-500">Bangladesh Directory</span>
+            NZ Study Planner<br />
+            <span className="text-xs font-normal text-gray-500">Bangladesh</span>
           </span>
         </Link>
 

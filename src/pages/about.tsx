@@ -6,7 +6,7 @@ export default function AboutPage() {
   return (
     <>
       <Head>
-        <title>About — NZ Study Agent Directory Bangladesh</title>
+        <title>About — New Zealand Study Planner - Bangladesh</title>
       </Head>
       <Layout>
         <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:px-8">
@@ -16,7 +16,7 @@ export default function AboutPage() {
             <section>
               <h2 className="text-base font-semibold text-gray-900">What is this?</h2>
               <p>
-                The <strong>NZ Study Agent Directory — Bangladesh</strong> is a free, community-maintained
+                The <strong>New Zealand Study Planner - Bangladesh</strong> is a free, student-friendly guide for Bangladeshi students planning to study in New Zealand.
                 website for Bangladeshi students who want to study in New Zealand. It brings together
                 authorized education agent listings from the official websites of New Zealand institutes
                 so students can find trustworthy agents in one place.

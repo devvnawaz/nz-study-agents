@@ -1,4 +1,4 @@
-# NZ Study Agent Directory — Bangladesh
+# New Zealand Study Planner - Bangladesh
 
 A free, community-maintained directory of authorized New Zealand education agents in Bangladesh.
 Students select an institute in New Zealand and see its official authorized agents with full contact details.

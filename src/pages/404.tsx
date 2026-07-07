@@ -5,7 +5,7 @@ import Layout from '@/components/Layout';
 export default function NotFound() {
   return (
     <>
-      <Head><title>Page not found — NZ Study Agent Directory</title></Head>
+      <Head><title>Page not found — New Zealand Study Planner - Bangladesh</title></Head>
       <Layout>
         <div className="mx-auto max-w-7xl px-4 py-20 text-center sm:px-6 lg:px-8">
           <p className="text-5xl font-extrabold text-brand-700">404</p>

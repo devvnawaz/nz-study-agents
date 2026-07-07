@@ -158,7 +158,7 @@ export default function InterviewQuestionsPage() {
   return (
     <>
       <Head>
-        <title>NZ Student Visa Interview Questions — NZ Study Agent Directory Bangladesh</title>
+        <title>NZ Student Visa Interview Questions — New Zealand Study Planner - Bangladesh</title>
         <meta
           name="description"
           content="Sample questions a visa or case officer may ask Bangladeshi students during a New Zealand student visa interview, grouped by topic to help you prepare."

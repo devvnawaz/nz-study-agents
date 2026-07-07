@@ -24,11 +24,25 @@ export default function Home({ institutes, agencyCounts, counts, demoMode }: Hom
   return (
     <>
       <Head>
-        <title>NZ Study Agent Directory — Authorized Agents in Bangladesh</title>
+        <title>New Zealand Study Planner - Bangladesh</title>
         <meta
           name="description"
-          content="Find authorized New Zealand education agents in Bangladesh. Select an institute and see verified agents with contact details, location, and source links."
+          content="A student-friendly resource for Bangladeshi students planning to study in New Zealand, including authorised agent listings, visa FAQs, interview questions, and a study cost calculator."
         />
+        <meta property="og:title" content="New Zealand Study Planner - Bangladesh" />
+        <meta
+          property="og:description"
+          content="A student-friendly resource for Bangladeshi students planning to study in New Zealand, including authorised agent listings, visa FAQs, interview questions, and a study cost calculator."
+        />
+        <meta property="twitter:title" content="New Zealand Study Planner - Bangladesh" />
+        <meta
+          property="twitter:description"
+          content="A student-friendly resource for Bangladeshi students planning to study in New Zealand, including authorised agent listings, visa FAQs, interview questions, and a study cost calculator."
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="NZ Study Planner" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@devnawaz" />
       </Head>
       <Layout>
         {demoMode && <DemoBanner />}
@@ -38,11 +52,11 @@ export default function Home({ institutes, agencyCounts, counts, demoMode }: Hom
           <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
             <div className="max-w-3xl">
               <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl lg:text-5xl">
-                Find authorized New Zealand education agents in Bangladesh
+                New Zealand Study Planner - Bangladesh
               </h1>
               <p className="mt-4 text-base text-brand-100 sm:text-lg">
-                Pick your desired institute in New Zealand and instantly see its official authorized
-                agents in Bangladesh — with contact details, address, website, and a link to the source.
+                Find authorised agents, estimate study costs, prepare for visa questions, and explore practical
+                guides for studying in New Zealand from Bangladesh.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <a href="#explore" className="btn-primary bg-white text-brand-800 hover:bg-brand-50">

@@ -348,7 +348,7 @@ export default function FaqPage() {
   return (
     <>
       <Head>
-        <title>New Zealand Student Visa FAQ for Bangladeshi Students</title>
+        <title>New Zealand Student Visa FAQ for Bangladeshi Students — New Zealand Study Planner - Bangladesh</title>
         <meta
           name="description"
           content="Common New Zealand student visa questions for Bangladeshi students, with links to official Immigration New Zealand and Study with New Zealand sources."

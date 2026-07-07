@@ -4,7 +4,7 @@ _Last updated: 2026-07-01 — student visa FAQ page added._
 
 ## Current project status
 
-The NZ Study Agent Directory is built, deployed, connected to Supabase, and under
+The New Zealand Study Planner - Bangladesh is built, deployed, connected to Supabase, and under
 GitHub/Vercel workflow. Recent work includes data import workflow improvements,
 public interview-question content, and admin-route security hardening.
 

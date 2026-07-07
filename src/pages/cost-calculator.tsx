@@ -108,7 +108,7 @@ export default function CostCalculatorPage() {
   return (
     <>
       <Head>
-        <title>New Zealand Study Cost Calculator — NZ Study Agent Directory</title>
+        <title>New Zealand Study Cost Calculator — New Zealand Study Planner - Bangladesh</title>
         <meta
           name="description"
           content="Estimate tuition, living costs, one-time expenses, scholarships, and approximate BDT equivalent for New Zealand study planning."

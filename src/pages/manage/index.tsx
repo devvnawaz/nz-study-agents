@@ -747,7 +747,7 @@ export default function AdminPage() {
 
   return (
     <>
-      <Head><title>Admin — NZ Study Agent Directory</title></Head>
+      <Head><title>Admin — New Zealand Study Planner - Bangladesh</title></Head>
 
       {/* Header */}
       <div className="border-b border-gray-200 bg-white sticky top-0 z-50">

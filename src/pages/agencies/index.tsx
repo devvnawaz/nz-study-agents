@@ -35,7 +35,7 @@ export default function AgenciesPage({ agencies, demoMode }: AgenciesPageProps) 
   return (
     <>
       <Head>
-        <title>Agencies in Bangladesh — NZ Study Agent Directory</title>
+        <title>Agencies in Bangladesh — New Zealand Study Planner - Bangladesh</title>
         <meta name="description" content="All authorized NZ education agents in Bangladesh with contact details." />
       </Head>
       <Layout>

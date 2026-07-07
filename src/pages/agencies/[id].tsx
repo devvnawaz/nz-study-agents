@@ -19,7 +19,7 @@ export default function AgencyDetail({ agency, institutes, demoMode }: AgencyDet
   return (
     <>
       <Head>
-        <title>{`${agency.name} — NZ Study Agent Directory`}</title>
+        <title>{`${agency.name} — New Zealand Study Planner - Bangladesh`}</title>
         <meta
           name="description"
           content={`${agency.name} in ${agency.city}, Bangladesh — authorized NZ education agent. Contact, address, and institute listings.`}

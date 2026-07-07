@@ -9,10 +9,10 @@ export default function Footer() {
           <div>
             <span className="flex items-center gap-2 mb-2">
               <span className="flex h-7 w-7 items-center justify-center rounded bg-nz-black text-white text-sm font-black">NZ</span>
-              <span className="font-bold text-gray-900 text-sm">Study Agent Directory — Bangladesh</span>
+              <span className="font-bold text-gray-900 text-sm">New Zealand Study Planner - Bangladesh</span>
             </span>
             <p className="text-xs text-gray-500 leading-relaxed">
-              A free directory of authorized New Zealand education agents in Bangladesh, created by students for students.
+              A student-friendly guide for Bangladeshis planning to study in New Zealand.
             </p>
           </div>
 
@@ -48,7 +48,16 @@ export default function Footer() {
         </div>
 
         <div className="mt-8 border-t border-gray-100 pt-6 text-center text-xs text-gray-400">
-          © {new Date().getFullYear()} NZ Study Agent Directory — Bangladesh. A community-built resource for Bangladeshi students exploring New Zealand study options.
+          © {new Date().getFullYear()} New Zealand Study Planner - Bangladesh. A resource for Bangladeshi students exploring New Zealand study options. Developed by{' '}
+          <a
+            href="https://www.linkedin.com/in/devnawaz/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-medium text-gray-500 hover:text-brand-700 hover:underline"
+          >
+            devnawaz
+          </a>
+          .
         </div>
       </div>
     </footer>
