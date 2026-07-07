@@ -1,6 +1,9 @@
 import Head from 'next/head';
 import Link from 'next/link';
 import Layout from '@/components/Layout';
+import PageHeader from '@/components/PageHeader';
+import Alert from '@/components/Alert';
+import { ChevronDownIcon, ExternalIcon } from '@/components/icons';
 
 interface Source {
   label: string;
@@ -322,6 +325,10 @@ const categories: FaqCategory[] = [
   },
 ];
 
+function slugify(text: string) {
+  return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+}
+
 function SourceLinks({ sources }: { sources: Source[] }) {
   return (
     <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1">
@@ -331,11 +338,9 @@ function SourceLinks({ sources }: { sources: Source[] }) {
           href={s.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1 text-xs font-medium text-brand-700 hover:text-brand-900 hover:underline"
+          className="inline-flex items-center gap-1 text-xs font-medium text-accent-700 hover:text-accent-900 hover:underline"
         >
-          <svg className="h-3.5 w-3.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5h5m0 0v5m0-5L10 14M9 5H5v14h14v-4" />
-          </svg>
+          <ExternalIcon className="h-3.5 w-3.5 flex-shrink-0" />
           {s.label}
           <span className="sr-only"> (opens in a new tab)</span>
         </a>
@@ -348,57 +353,64 @@ export default function FaqPage() {
   return (
     <>
       <Head>
-        <title>New Zealand Student Visa FAQ for Bangladeshi Students — New Zealand Study Planner - Bangladesh</title>
+        <title>New Zealand Student Visa FAQ for Bangladeshi Students</title>
         <meta
           name="description"
           content="Common New Zealand student visa questions for Bangladeshi students, with links to official Immigration New Zealand and Study with New Zealand sources."
         />
       </Head>
       <Layout>
-        <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:px-8">
-          <h1 className="section-title mb-3">New Zealand Student Visa FAQ for Bangladeshi Students</h1>
-          <p className="mb-6 text-sm text-gray-600 leading-relaxed">
-            This FAQ gives general guidance for students planning to apply for a New Zealand student
-            visa. Visa rules and requirements can change, so you should always check Immigration New
-            Zealand and other official sources for the latest requirements before you apply.
-          </p>
+        <PageHeader
+          eyebrow="Student visa guidance"
+          title="New Zealand Student Visa FAQ for Bangladeshi Students"
+          subtitle="General guidance for students planning to apply for a New Zealand student visa. Visa rules and requirements can change, so always check Immigration New Zealand and other official sources before you apply."
+        />
 
+        <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:px-8">
           {/* Disclaimer box */}
-          <section className="mb-8 rounded-xl border border-amber-200 bg-amber-50 p-5 text-sm text-amber-800 leading-relaxed">
-            <p>
-              <strong>Disclaimer:</strong> This page is for general information only and is not
-              immigration advice. New Zealand visa rules, financial requirements, work conditions,
-              fees, and travel requirements can change. Always verify details from Immigration New
-              Zealand, Study with New Zealand, your institution, or a licensed immigration adviser.
-            </p>
-          </section>
+          <div className="mb-8">
+            <Alert variant="warning" title="Disclaimer">
+              This page is for general information only and is not immigration advice. New Zealand visa
+              rules, financial requirements, work conditions, fees, and travel requirements can change.
+              Always verify details from Immigration New Zealand, Study with New Zealand, your
+              institution, or a licensed immigration adviser.
+            </Alert>
+          </div>
+
+          {/* Category jump list */}
+          <nav aria-label="FAQ categories" className="mb-10 rounded-2xl border border-ink-200/70 bg-white p-4 shadow-card">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-ink-400">Jump to a category</p>
+            <div className="flex flex-wrap gap-2">
+              {categories.map((cat, index) => (
+                <a
+                  key={cat.category}
+                  href={`#${slugify(cat.category)}`}
+                  className="rounded-full border border-ink-200 bg-ink-50 px-3 py-1.5 text-xs font-medium text-ink-700 transition hover:border-accent-300 hover:bg-accent-50 hover:text-accent-800"
+                >
+                  {index + 1}. {cat.category}
+                </a>
+              ))}
+            </div>
+          </nav>
 
           <div className="space-y-10">
             {categories.map((cat, index) => (
-              <section key={cat.category}>
-                <h2 className="mb-3 text-lg font-semibold text-gray-900">
+              <section key={cat.category} id={slugify(cat.category)} className="scroll-mt-24">
+                <h2 className="mb-3 text-lg font-semibold text-ink-900">
                   {index + 1}. {cat.category}
                 </h2>
                 <div className="space-y-3">
                   {cat.items.map((item) => (
                     <details
                       key={item.question}
-                      className="group rounded-xl border border-gray-200 bg-white shadow-sm transition hover:shadow-md"
+                      className="group rounded-2xl border border-ink-200/70 bg-white shadow-card transition open:shadow-card-hover hover:shadow-card-hover"
                     >
-                      <summary className="flex cursor-pointer list-none items-center justify-between gap-3 rounded-xl px-4 py-3 text-sm font-medium text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2">
+                      <summary className="flex cursor-pointer list-none items-center justify-between gap-3 rounded-2xl px-4 py-3.5 text-sm font-medium text-ink-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2">
                         <span>{item.question}</span>
-                        <svg
-                          className="h-5 w-5 flex-shrink-0 text-gray-400 transition group-open:rotate-180"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          aria-hidden="true"
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                        </svg>
+                        <ChevronDownIcon className="h-5 w-5 flex-shrink-0 text-ink-400 transition group-open:rotate-180 group-open:text-accent-600" />
                       </summary>
-                      <div className="border-t border-gray-100 px-4 py-3">
-                        <p className="text-sm text-gray-700 leading-relaxed">{item.answer}</p>
+                      <div className="border-t border-ink-100 px-4 py-3.5">
+                        <p className="text-sm leading-relaxed text-ink-600">{item.answer}</p>
                         {item.sources && item.sources.length > 0 && <SourceLinks sources={item.sources} />}
                       </div>
                     </details>
@@ -408,10 +420,10 @@ export default function FaqPage() {
             ))}
           </div>
 
-          <section className="mt-10 rounded-xl border border-gray-200 bg-gray-50 p-5 text-sm text-gray-600 leading-relaxed">
+          <section className="mt-10 rounded-2xl border border-ink-200/70 bg-ink-50/60 p-5 text-sm leading-relaxed text-ink-600">
             <p>
               Looking for authorised agents? Browse the{' '}
-              <Link href="/institutes" className="font-medium text-brand-700 hover:underline">
+              <Link href="/institutes" className="font-medium text-accent-700 hover:underline">
                 institutes directory
               </Link>{' '}
               to see authorised education agents published on official institution websites, and always

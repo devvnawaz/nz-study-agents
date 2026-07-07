@@ -1,6 +1,7 @@
 import Head from 'next/head';
-import Link from 'next/link';
 import Layout from '@/components/Layout';
+import PageHeader from '@/components/PageHeader';
+import Alert from '@/components/Alert';
 
 interface QuestionGroup {
   category: string;
@@ -165,21 +166,31 @@ export default function InterviewQuestionsPage() {
         />
       </Head>
       <Layout>
-        <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:px-8">
-          <h1 className="section-title mb-3">NZ student visa interview questions</h1>
-          <p className="mb-6 text-sm text-gray-600 leading-relaxed">
-            These are common types of questions that a visa officer or case officer may ask during a
-            student visa interview or assessment. The questions may vary depending on the applicant&apos;s
-            profile, course, financial documents, sponsor, and future plans.
-          </p>
+        <PageHeader
+          eyebrow="Interview preparation"
+          title="NZ Student Visa Interview Questions"
+          subtitle="Common types of questions that a visa officer or case officer may ask during a student visa interview or assessment. Questions may vary depending on your profile, course, financial documents, sponsor, and future plans."
+        />
 
-          <div className="space-y-8">
+        <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8">
+          <div className="mb-8">
+            <Alert variant="warning" title="Preparation note">
+              These are <strong>sample preparation questions only</strong> — not official questions and
+              not a guarantee of what you will be asked. Always answer honestly and in your own words,
+              based on your genuine study plans and documents.
+            </Alert>
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             {groups.map((group, index) => (
-              <section key={group.category}>
-                <h2 className="text-base font-semibold text-gray-900">
-                  {index + 1}. {group.category}
+              <section key={group.category} className="card p-5 sm:p-6">
+                <h2 className="flex items-start gap-2.5 text-base font-semibold text-ink-900">
+                  <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-accent-100 text-xs font-bold text-accent-800">
+                    {index + 1}
+                  </span>
+                  {group.category}
                 </h2>
-                <ol className="mt-2 list-decimal space-y-1 pl-5 text-sm text-gray-700 leading-relaxed">
+                <ol className="mt-3 list-decimal space-y-1.5 pl-5 text-sm leading-relaxed text-ink-600">
                   {group.items.map((question) => (
                     <li key={question}>{question}</li>
                   ))}
@@ -187,14 +198,6 @@ export default function InterviewQuestionsPage() {
               </section>
             ))}
           </div>
-
-          <section className="mt-10 rounded-xl border border-amber-200 bg-amber-50 p-5 text-sm text-amber-800">
-            <p>
-              These are <strong>sample preparation questions only</strong> — not official questions and
-              not a guarantee of what you will be asked. Always answer honestly and in your own words,
-              based on your genuine study plans and documents.
-            </p>
-          </section>
         </div>
       </Layout>
     </>

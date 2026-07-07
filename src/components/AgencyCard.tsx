@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { AgencyForInstitute } from '@/lib/types';
 import { getStatusBadgeClass, getStatusLabel, formatDate, formatPhone } from '@/lib/utils';
+import { WarningIcon } from './icons';
 
 interface AgencyCardProps {
   agency: AgencyForInstitute;
@@ -14,8 +15,8 @@ function CardBody({ agency }: { agency: AgencyForInstitute }) {
       {/* Header */}
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <h3 className="font-semibold text-gray-900 leading-snug">{agency.name}</h3>
-          <p className="text-sm text-gray-500">{agency.city}, Bangladesh</p>
+          <h3 className="font-semibold leading-snug text-ink-900">{agency.name}</h3>
+          <p className="text-sm text-ink-500">{agency.city}, Bangladesh</p>
         </div>
         <span className={getStatusBadgeClass(agency.authorization_status)}>
           {getStatusLabel(agency.authorization_status)}
@@ -26,15 +27,15 @@ function CardBody({ agency }: { agency: AgencyForInstitute }) {
       <dl className="mt-4 grid grid-cols-1 gap-y-2 text-sm sm:grid-cols-2">
         {agency.address && (
           <div className="sm:col-span-2">
-            <dt className="text-xs font-medium text-gray-400 uppercase tracking-wide">Address</dt>
-            <dd className="text-gray-700">{agency.address}</dd>
+            <dt className="text-xs font-medium uppercase tracking-wide text-ink-400">Address</dt>
+            <dd className="text-ink-700">{agency.address}</dd>
           </div>
         )}
         {agency.phone && (
           <div>
-            <dt className="text-xs font-medium text-gray-400 uppercase tracking-wide">Phone</dt>
+            <dt className="text-xs font-medium uppercase tracking-wide text-ink-400">Phone</dt>
             <dd>
-              <a href={`tel:${formatPhone(agency.phone).replace(/\s/g, '')}`} className="text-brand-700 hover:underline">
+              <a href={`tel:${formatPhone(agency.phone).replace(/\s/g, '')}`} className="text-accent-700 hover:underline">
                 {formatPhone(agency.phone)}
               </a>
             </dd>
@@ -42,9 +43,9 @@ function CardBody({ agency }: { agency: AgencyForInstitute }) {
         )}
         {agency.email && (
           <div>
-            <dt className="text-xs font-medium text-gray-400 uppercase tracking-wide">Email</dt>
+            <dt className="text-xs font-medium uppercase tracking-wide text-ink-400">Email</dt>
             <dd>
-              <a href={`mailto:${agency.email}`} className="text-brand-700 hover:underline break-all">
+              <a href={`mailto:${agency.email}`} className="break-all text-accent-700 hover:underline">
                 {agency.email}
               </a>
             </dd>
@@ -52,13 +53,13 @@ function CardBody({ agency }: { agency: AgencyForInstitute }) {
         )}
         {agency.website && (
           <div>
-            <dt className="text-xs font-medium text-gray-400 uppercase tracking-wide">Website</dt>
+            <dt className="text-xs font-medium uppercase tracking-wide text-ink-400">Website</dt>
             <dd>
               <a
                 href={agency.website}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-brand-700 hover:underline break-all"
+                className="break-all text-accent-700 hover:underline"
               >
                 {agency.website.replace(/^https?:\/\//, '')}
               </a>
@@ -67,21 +68,21 @@ function CardBody({ agency }: { agency: AgencyForInstitute }) {
         )}
         {agency.contact_person && (
           <div>
-            <dt className="text-xs font-medium text-gray-400 uppercase tracking-wide">Contact Person</dt>
-            <dd className="text-gray-700">{agency.contact_person}</dd>
+            <dt className="text-xs font-medium uppercase tracking-wide text-ink-400">Contact Person</dt>
+            <dd className="text-ink-700">{agency.contact_person}</dd>
           </div>
         )}
       </dl>
 
       {/* Source + verified */}
-      <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-gray-100 pt-3 text-xs text-gray-400">
+      <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-ink-100 pt-3 text-xs text-ink-400">
         <span>Verified: {formatDate(agency.last_verified_at)}</span>
         <span>·</span>
         <a
           href={agency.source_url}
           target="_blank"
           rel="noopener noreferrer"
-          className="hover:text-brand-600 transition"
+          className="transition hover:text-accent-600"
           title="View source on institute website"
         >
           View Source ↗
@@ -89,7 +90,7 @@ function CardBody({ agency }: { agency: AgencyForInstitute }) {
         <span className="ml-auto">
           <Link
             href={`/report?agency=${agency.id}`}
-            className="hover:text-red-500 transition"
+            className="transition hover:text-red-500"
           >
             Report outdated info
           </Link>
@@ -97,8 +98,9 @@ function CardBody({ agency }: { agency: AgencyForInstitute }) {
       </div>
 
       {agency.notes && (
-        <p className="mt-2 rounded bg-yellow-50 px-3 py-2 text-xs text-yellow-800 border border-yellow-200">
-          ⚠️ {agency.notes}
+        <p className="mt-3 flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">
+          <WarningIcon className="mt-0.5 h-3.5 w-3.5 flex-shrink-0" />
+          {agency.notes}
         </p>
       )}
     </div>

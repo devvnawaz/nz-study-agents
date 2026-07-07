@@ -2,6 +2,8 @@ import { useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import Layout from '@/components/Layout';
+import PageHeader from '@/components/PageHeader';
+import Alert from '@/components/Alert';
 
 type Status = 'idle' | 'loading' | 'success' | 'error';
 
@@ -43,34 +45,35 @@ export default function ReportPage() {
         <title>Report Outdated Info — New Zealand Study Planner - Bangladesh</title>
       </Head>
       <Layout>
-        <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6 lg:px-8">
-          <h1 className="section-title mb-2">Report outdated information</h1>
-          <p className="mb-6 text-gray-500 text-sm">
-            Help keep the directory accurate. Tell us what is wrong or missing and we will update it.
-          </p>
+        <PageHeader
+          eyebrow="Keep the directory accurate"
+          title="Report outdated information"
+          subtitle="Tell us what is wrong or missing and we will review it."
+        />
 
+        <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6 lg:px-8">
           {status === 'success' ? (
-            <div className="rounded-xl border border-green-200 bg-green-50 p-6 text-center text-green-800">
+            <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-6 text-center text-emerald-800">
               <p className="text-lg font-semibold">✓ Report submitted — thank you!</p>
               <p className="mt-2 text-sm">We will review the information and update the directory if needed.</p>
               <button
                 onClick={() => setStatus('idle')}
-                className="mt-4 btn-secondary"
+                className="btn-secondary mt-4"
               >
                 Submit another report
               </button>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="card p-6 space-y-5">
+            <form onSubmit={handleSubmit} className="card space-y-5 p-6 sm:p-7">
               {(institute || agency) && (
-                <div className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-800">
-                  This report is linked to {institute ? 'an institute' : 'an agency'} listing.
-                  {' '}You can also describe the issue in the message below.
-                </div>
+                <Alert variant="info" title="Linked listing">
+                  This report is linked to {institute ? 'an institute' : 'an agency'} listing. You can also
+                  describe the issue in the message below.
+                </Alert>
               )}
 
               <div>
-                <label htmlFor="message" className="mb-1.5 block text-sm font-medium text-gray-700">
+                <label htmlFor="message" className="mb-1.5 block text-sm font-medium text-ink-700">
                   What needs to be corrected or added? <span className="text-red-500">*</span>
                 </label>
                 <textarea
@@ -80,12 +83,16 @@ export default function ReportPage() {
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="e.g. The phone number for XYZ Agency is wrong — the correct number is... / The agent list for University of Auckland now includes ABC Consultancy: [source URL]"
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                  className="input"
                 />
+                <p className="mt-1.5 text-xs text-ink-500">
+                  If possible, include the official institute source URL — it helps us verify and update
+                  the listing faster.
+                </p>
               </div>
 
               <div>
-                <label htmlFor="contact" className="mb-1.5 block text-sm font-medium text-gray-700">
+                <label htmlFor="contact" className="mb-1.5 block text-sm font-medium text-ink-700">
                   Your email (optional — for follow-up only)
                 </label>
                 <input
@@ -94,7 +101,7 @@ export default function ReportPage() {
                   value={contact}
                   onChange={(e) => setContact(e.target.value)}
                   placeholder="you@example.com"
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                  className="input"
                 />
               </div>
 

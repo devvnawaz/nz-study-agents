@@ -3,6 +3,7 @@ import type { GetStaticProps } from 'next';
 import Layout from '@/components/Layout';
 import DemoBanner from '@/components/DemoBanner';
 import SearchExplorer from '@/components/SearchExplorer';
+import PageHeader from '@/components/PageHeader';
 import type { Institute } from '@/lib/types';
 import { getAllInstitutes, getAgenciesForInstitute } from '@/lib/data';
 import { isSupabaseConfigured } from '@/lib/supabase';
@@ -43,17 +44,20 @@ export default function InstitutesPage({ institutes, agencyCounts, demoMode }: I
       </Head>
       <Layout>
         {demoMode && <DemoBanner />}
+
+        <PageHeader
+          eyebrow="Institute directory"
+          title="All Institutes"
+          subtitle={`${institutes.length} New Zealand institutes. Open one to see its authorized agents in Bangladesh.`}
+        />
+
         <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-          <h1 className="section-title mb-1">All institutes</h1>
-          <p className="mb-6 text-gray-500">
-            {institutes.length} New Zealand institutes. Open one to see its authorized agents in Bangladesh.
-          </p>
           <SearchExplorer institutes={institutes} agencyCounts={agencyCounts} />
 
-          <section className="mt-10 rounded-2xl border border-brand-100 bg-brand-50/70 p-5 sm:p-6">
+          <section className="mt-10 rounded-2xl border border-ink-200/70 bg-white p-5 shadow-card sm:p-7">
             <div className="max-w-4xl">
-              <h2 className="text-lg font-semibold text-gray-900">Can&apos;t find your preferred institution?</h2>
-              <div className="mt-3 space-y-3 text-sm leading-6 text-gray-700">
+              <h2 className="text-lg font-semibold text-ink-900">Can&apos;t find your preferred institution?</h2>
+              <div className="mt-3 space-y-3 text-sm leading-6 text-ink-600">
                 <p>
                   This directory is built from publicly available authorised-agent information found on each New Zealand institution&apos;s official website. If you do not see your preferred institution listed here, please check that institution&apos;s official website directly to find its authorised education agents or representatives.
                 </p>
@@ -63,8 +67,8 @@ export default function InstitutesPage({ institutes, agencyCounts, demoMode }: I
               </div>
             </div>
 
-            <div className="mt-6 border-t border-brand-100 pt-5">
-              <h3 className="text-base font-semibold text-gray-900">Institutions checked so far</h3>
+            <div className="mt-6 border-t border-ink-100 pt-6">
+              <h3 className="text-base font-semibold text-ink-900">Institutions checked so far</h3>
               <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {CHECKED_INSTITUTIONS.map((institution) => (
                   <a
@@ -72,7 +76,7 @@ export default function InstitutesPage({ institutes, agencyCounts, demoMode }: I
                     href={institution.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-brand-800 shadow-sm transition hover:border-brand-200 hover:bg-white hover:text-brand-900 focus:outline-none focus:ring-2 focus:ring-brand-600 focus:ring-offset-2"
+                    className="rounded-xl border border-ink-200 bg-ink-50/60 px-4 py-3 text-sm font-medium text-accent-800 shadow-sm transition hover:border-accent-200 hover:bg-white hover:text-accent-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2"
                   >
                     {institution.name}
                     <span className="sr-only"> (opens in a new tab)</span>

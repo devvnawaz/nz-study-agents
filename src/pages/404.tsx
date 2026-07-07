@@ -7,10 +7,10 @@ export default function NotFound() {
     <>
       <Head><title>Page not found — New Zealand Study Planner - Bangladesh</title></Head>
       <Layout>
-        <div className="mx-auto max-w-7xl px-4 py-20 text-center sm:px-6 lg:px-8">
-          <p className="text-5xl font-extrabold text-brand-700">404</p>
-          <h1 className="mt-4 text-2xl font-bold text-gray-900">Page not found</h1>
-          <p className="mt-2 text-gray-500">The page you are looking for does not exist.</p>
+        <div className="mx-auto max-w-7xl px-4 py-24 text-center sm:px-6 lg:px-8">
+          <p className="text-6xl font-extrabold text-accent-600">404</p>
+          <h1 className="mt-4 text-2xl font-bold text-ink-900">Page not found</h1>
+          <p className="mt-2 text-ink-500">The page you are looking for does not exist.</p>
           <div className="mt-8 flex justify-center gap-3">
             <Link href="/" className="btn-primary">Go to home</Link>
             <Link href="/institutes" className="btn-secondary">Browse institutes</Link>

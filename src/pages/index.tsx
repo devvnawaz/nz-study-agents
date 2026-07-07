@@ -4,6 +4,8 @@ import Layout from '@/components/Layout';
 import DemoBanner from '@/components/DemoBanner';
 import SearchExplorer from '@/components/SearchExplorer';
 import Disclaimer from '@/components/Disclaimer';
+import HeroBackdrop from '@/components/HeroBackdrop';
+import { ArrowRightIcon, PlayIcon } from '@/components/icons';
 import type { Institute } from '@/lib/types';
 import {
   getAllInstitutes,
@@ -48,53 +50,68 @@ export default function Home({ institutes, agencyCounts, counts, demoMode }: Hom
         {demoMode && <DemoBanner />}
 
         {/* Hero */}
-        <section className="bg-gradient-to-b from-nz-black to-brand-900 text-white">
-          <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
+        <section className="relative isolate overflow-hidden bg-ink-900 pb-28 pt-16 sm:pb-32 sm:pt-20">
+          <HeroBackdrop />
+          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl">
-              <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl lg:text-5xl">
-                New Zealand Study Planner - Bangladesh
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-ink-200">
+                <span className="h-1.5 w-1.5 rounded-full bg-accent-400" />
+                Updated for New Zealand study planning
+              </span>
+
+              <h1 className="mt-5 text-4xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
+                Your Path to <span className="text-accent-400">New Zealand</span> Starts Here
               </h1>
-              <p className="mt-4 text-base text-brand-100 sm:text-lg">
-                Find authorised agents, estimate study costs, prepare for visa questions, and explore practical
-                guides for studying in New Zealand from Bangladesh.
+
+              <p className="mt-5 max-w-2xl text-base leading-relaxed text-ink-300 sm:text-lg">
+                Find authorised agents, estimate study costs, prepare for visa questions, and explore
+                practical guides for studying in New Zealand from Bangladesh.
               </p>
-              <div className="mt-6 flex flex-wrap gap-3">
-                <a href="#explore" className="btn-primary bg-white text-brand-800 hover:bg-brand-50">
-                  Start searching
+
+              <div className="mt-8 flex flex-wrap gap-3">
+                <a href="#explore" className="btn-primary">
+                  Start Searching
+                  <ArrowRightIcon className="h-4 w-4" />
                 </a>
-                <a href="/about" className="btn-secondary border-white/30 bg-white/10 text-white hover:bg-white/20">
+                <a href="/about" className="btn-dark">
+                  <PlayIcon className="h-4 w-4" />
                   How it works
                 </a>
               </div>
 
               {/* Stats */}
-              <dl className="mt-10 grid max-w-md grid-cols-3 gap-4">
+              <dl className="mt-10 grid max-w-md grid-cols-3 gap-4 border-t border-white/10 pt-8">
                 <div>
-                  <dt className="text-xs uppercase tracking-wide text-brand-200">Institutes</dt>
-                  <dd className="text-2xl font-bold">{counts.institutes}</dd>
+                  <dd className="text-2xl font-extrabold text-white">{counts.institutes}+</dd>
+                  <dt className="text-xs uppercase tracking-wide text-ink-400">Institutes</dt>
                 </div>
                 <div>
-                  <dt className="text-xs uppercase tracking-wide text-brand-200">Agents</dt>
-                  <dd className="text-2xl font-bold">{counts.agencies}</dd>
+                  <dd className="text-2xl font-extrabold text-white">{counts.agencies}</dd>
+                  <dt className="text-xs uppercase tracking-wide text-ink-400">Agents</dt>
                 </div>
                 <div>
-                  <dt className="text-xs uppercase tracking-wide text-brand-200">Listings</dt>
-                  <dd className="text-2xl font-bold">{counts.representations}</dd>
+                  <dd className="text-2xl font-extrabold text-white">{counts.representations}</dd>
+                  <dt className="text-xs uppercase tracking-wide text-ink-400">Listings</dt>
                 </div>
               </dl>
             </div>
           </div>
         </section>
 
-        {/* Explorer */}
-        <section id="explore" className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-          <h2 className="section-title mb-1">Browse institutes</h2>
-          <p className="mb-6 text-gray-500">Search or filter to find your institute, then open it to see its authorized agents.</p>
-          <SearchExplorer institutes={institutes} agencyCounts={agencyCounts} />
+        {/* Explorer — floating search card overlaps the hero/content boundary */}
+        <section id="explore" className="mx-auto max-w-7xl px-4 pb-4 sm:px-6 lg:px-8">
+          <div className="-mt-16 sm:-mt-20">
+            <SearchExplorer
+              institutes={institutes}
+              agencyCounts={agencyCounts}
+              floating
+              heading="Browse Institutes"
+            />
+          </div>
         </section>
 
         {/* Disclaimer */}
-        <section className="mx-auto max-w-7xl px-4 pb-14 sm:px-6 lg:px-8">
+        <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
           <Disclaimer />
         </section>
       </Layout>

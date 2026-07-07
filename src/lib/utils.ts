@@ -20,6 +20,17 @@ export function getTypeBadgeClass(type: InstituteType): string {
   }
 }
 
+/** Decorative gradient used as the "image" header on institute cards. */
+export function getTypeGradient(type: InstituteType): string {
+  switch (type) {
+    case 'University':             return 'from-sky-200 via-cyan-100 to-teal-100';
+    case 'Polytechnic':            return 'from-indigo-200 via-sky-100 to-blue-100';
+    case 'Private Institute':      return 'from-amber-200 via-orange-100 to-rose-100';
+    case 'English Language School': return 'from-teal-200 via-emerald-100 to-green-100';
+    default:                        return 'from-slate-200 via-slate-100 to-gray-100';
+  }
+}
+
 export function getStatusBadgeClass(status: AuthorizationStatus): string {
   switch (status) {
     case 'authorized': return 'badge-authorized';

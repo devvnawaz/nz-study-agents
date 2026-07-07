@@ -1,10 +1,20 @@
 import { useMemo, useState } from 'react';
 import type { Institute, InstituteType } from '@/lib/types';
 import InstituteCard from './InstituteCard';
+import { SearchIcon } from './icons';
 
 interface SearchExplorerProps {
   institutes: Institute[];
   agencyCounts: Record<string, number>;
+  /** Heading shown above the results grid. */
+  heading?: string;
+  /** Sub text under the heading. */
+  subheading?: string;
+  /**
+   * When true, the filter bar renders as a floating card meant to overlap a
+   * hero section above it (used on the homepage).
+   */
+  floating?: boolean;
 }
 
 const TYPES: (InstituteType | 'All')[] = [
@@ -15,7 +25,13 @@ const TYPES: (InstituteType | 'All')[] = [
   'English Language School',
 ];
 
-export default function SearchExplorer({ institutes, agencyCounts }: SearchExplorerProps) {
+export default function SearchExplorer({
+  institutes,
+  agencyCounts,
+  heading,
+  subheading,
+  floating = false,
+}: SearchExplorerProps) {
   const [query, setQuery] = useState('');
   const [type, setType] = useState<InstituteType | 'All'>('All');
   const [city, setCity] = useState<string>('All');
@@ -37,17 +53,20 @@ export default function SearchExplorer({ institutes, agencyCounts }: SearchExplo
 
   return (
     <div>
-      {/* Search controls */}
-      <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm sm:p-6">
+      {/* Filter bar */}
+      <div
+        className={
+          floating
+            ? 'relative z-10 rounded-2xl border border-ink-100 bg-white p-3 shadow-float sm:p-4'
+            : 'rounded-2xl border border-ink-200/70 bg-white p-3 shadow-card sm:p-4'
+        }
+      >
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-12">
-          {/* Search box */}
           <div className="sm:col-span-6">
             <label htmlFor="search" className="sr-only">Search institutes</label>
             <div className="relative">
-              <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-gray-400">
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
+              <span className="pointer-events-none absolute inset-y-0 left-3.5 flex items-center text-ink-400">
+                <SearchIcon className="h-5 w-5" />
               </span>
               <input
                 id="search"
@@ -55,37 +74,35 @@ export default function SearchExplorer({ institutes, agencyCounts }: SearchExplo
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search by institute name…"
-                className="w-full rounded-lg border border-gray-300 py-2.5 pl-10 pr-3 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                className="input pl-11"
               />
             </div>
           </div>
 
-          {/* Type filter */}
           <div className="sm:col-span-3">
             <label htmlFor="type" className="sr-only">Institute type</label>
             <select
               id="type"
               value={type}
               onChange={(e) => setType(e.target.value as InstituteType | 'All')}
-              className="w-full rounded-lg border border-gray-300 py-2.5 px-3 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+              className="select"
             >
               {TYPES.map((t) => (
-                <option key={t} value={t}>{t === 'All' ? 'All types' : t}</option>
+                <option key={t} value={t}>{t === 'All' ? 'All Types' : t}</option>
               ))}
             </select>
           </div>
 
-          {/* City filter */}
           <div className="sm:col-span-3">
             <label htmlFor="city" className="sr-only">City in NZ</label>
             <select
               id="city"
               value={city}
               onChange={(e) => setCity(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 py-2.5 px-3 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+              className="select"
             >
               {cities.map((c) => (
-                <option key={c} value={c}>{c === 'All' ? 'All NZ cities' : c}</option>
+                <option key={c} value={c}>{c === 'All' ? 'All NZ Cities' : c}</option>
               ))}
             </select>
           </div>
@@ -93,16 +110,19 @@ export default function SearchExplorer({ institutes, agencyCounts }: SearchExplo
       </div>
 
       {/* Results */}
-      <div className="mt-6">
-        <p className="mb-3 text-sm text-gray-500">
-          Showing <span className="font-semibold text-gray-700">{filtered.length}</span> of {institutes.length} institutes
+      <div className={floating ? 'mt-10' : 'mt-8'}>
+        {heading && <h2 className="section-title">{heading}</h2>}
+        <p className="mt-1 text-sm text-ink-500">
+          {subheading ? `${subheading} · ` : ''}Showing{' '}
+          <span className="font-semibold text-ink-700">{filtered.length}</span> of {institutes.length} institutes
         </p>
+
         {filtered.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-gray-300 bg-white p-10 text-center text-gray-500">
+          <div className="mt-6 rounded-2xl border border-dashed border-ink-300 bg-white p-10 text-center text-ink-500">
             No institutes match your search. Try clearing the filters.
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {filtered.map((inst) => (
               <InstituteCard
                 key={inst.id}
