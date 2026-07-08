@@ -1,6 +1,6 @@
 # PROJECT_STATE.md
 
-_Source of truth for the current project state. Last updated: 2026-07-08 — report-form spam protection (`3f70f00`) and Unitec image/.gitignore (`841144c`) committed; live-site images verified._
+_Source of truth for the current project state. Last updated: 2026-07-09 — visa-checklist feature planned (not yet built); no code changes since `841144c`._
 
 ## Identity
 
@@ -92,14 +92,40 @@ _Source of truth for the current project state. Last updated: 2026-07-08 — rep
   Supabase has provider names that differ from the current normalized-name checks,
   add a mapping in `InstituteCard.tsx` rather than relying on broad fuzzy matching.
 
+## Planned feature: Visa checklist (agreed 2026-07-09, not yet built)
+
+- **Route:** `/visa-checklist` — one profile-driven page, NOT four separate pages.
+- **Profile selector:** chip groups (calculator-duration-chip pattern) for study
+  level (Bachelor's / Master's — possibly PhD, see open question) and family
+  situation (Just me / With spouse-partner / With spouse & children).
+- **Checklist composition:** typed data modules (base + master's add-on + spouse
+  add-on + children add-on) composed at render time — same data-array pattern as
+  the FAQ page.
+- **Items:** checkbox + title + 1–2 cautious sentences + INZ source links (reuse
+  FAQ `SourceLinks` pattern); grouped sections (Identity, Study, Financial,
+  Health & Character, Family); progress counter; ticked state in **localStorage**
+  (no accounts, per the no-auth decision).
+- **Scope guards:** static client-side page — no DB/schema/API changes, no new
+  dependencies; keeps warning `Alert` + cautious wording (preparation aid, not an
+  official requirements list); no PDF export for now.
+- **Nav impact:** adds a 7th nav item — accept tighter `lg` spacing for now;
+  revisit a "Resources" dropdown only when an 8th item appears.
+- **OPEN QUESTIONS (blocking start, awaiting user):**
+  1. Content source — agent drafts cautious wording + INZ links (like FAQ), or
+     user supplies a prepared list?
+  2. Study-level split — Bachelor's/Master's only, or also PhD (different work
+     rights/family rules) / diploma-polytechnic?
+
 ## Exact next task
 
-1. **SEO basics** — add `public/robots.txt` and a sitemap; consider JSON-LD
-   structured data for FAQ and directory pages. (First item in TASKS.md "Next".)
-2. Optionally verify the deployed spam protection on production: a 6th rapid
+1. **Visa checklist feature** — once the user answers the two open questions
+   above, build `/visa-checklist` per the plan.
+2. **SEO basics** — add `public/robots.txt` and a sitemap; consider JSON-LD
+   structured data for FAQ and directory pages.
+3. Optionally verify the deployed spam protection on production: a 6th rapid
    submission to `/report` should return 429 (limiter is per-instance, so this is
    best-effort on Vercel).
-3. Ongoing data upkeep: keep agent listings verified against official institute
+4. Ongoing data upkeep: keep agent listings verified against official institute
    pages via the CSV importer in `/manage`.
 
 Completed verification note (2026-07-08): all 10 institute card images + hero

@@ -1,12 +1,17 @@
 # TASKS.md
 
-_Prioritized backlog. Last updated: 2026-07-08 (spam protection `3f70f00`, Unitec image + .gitignore `841144c`)._
+_Prioritized backlog. Last updated: 2026-07-09 (visa-checklist feature planned)._
 
 ## Now
 
-1. **SEO basics** — add `public/robots.txt` and a sitemap; consider JSON-LD
+1. **Visa checklist feature** (`/visa-checklist`) — plan agreed 2026-07-09; see
+   PROJECT_STATE.md "Planned feature" for the full spec. **Blocked on two user
+   answers before starting:** (a) content source — agent-drafted cautious wording
+   + INZ links vs. user-supplied list; (b) study-level split — Bachelor's/Master's
+   only, or also PhD / diploma-polytechnic.
+2. **SEO basics** — add `public/robots.txt` and a sitemap; consider JSON-LD
    structured data for FAQ and directory pages.
-2. **Optional prod check** — confirm spam protection on the live site (6th rapid
+3. **Optional prod check** — confirm spam protection on the live site (6th rapid
    `/report` submission should return 429; honeypot silently discards).
 
 ## Next

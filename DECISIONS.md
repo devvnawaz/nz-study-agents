@@ -106,6 +106,27 @@ _Architectural, product, and process decisions, with rationale. Last updated 202
 - Chosen as a minimal hardening step; it is intentionally simple and can be replaced with
   a distributed limiter later if traffic warrants it.
 
+## Visa checklist feature — planning decisions (2026-07-09, build pending user answers)
+
+Agreed in principle with the user; not yet implemented. Key shape decisions:
+
+- **One profile-driven page** at `/visa-checklist`, not four separate pages —
+  profiles (study level × family situation) selected via chip groups, reusing the
+  calculator's duration-chip pattern.
+- **Checklist content as composable typed modules** (base + master's + spouse +
+  children add-ons), composed at render — mirrors the FAQ `categories` data-array
+  pattern; avoids duplicating shared items across four lists.
+- **Progress saved to localStorage** — persistent ticks without accounts,
+  consistent with the standing no-login decision.
+- **Positioning: preparation aid, not an official requirements list** — warning
+  `Alert`, cautious wording, per-section INZ source links mandatory (a checklist
+  implies authority, so this is stricter than the FAQ).
+- **Static client-side page** — no DB/schema/API changes, no new dependencies.
+- **Nav:** accept a 7th item with tighter `lg` spacing; only introduce a
+  "Resources" dropdown when an 8th item appears.
+- **Open before build:** content source (agent-drafted vs user-supplied) and
+  whether study levels beyond Bachelor's/Master's (PhD, diploma) are included.
+
 ## Report-form spam protection (2026-07-08)
 
 - **Honeypot over CAPTCHA** — a hidden `website` field (off-screen, `aria-hidden`,
