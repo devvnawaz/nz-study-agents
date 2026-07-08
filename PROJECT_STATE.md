@@ -1,6 +1,6 @@
 # PROJECT_STATE.md
 
-_Source of truth for the current project state. Last updated: 2026-07-08 — institute card images committed (`45a0f8a`)._
+_Source of truth for the current project state. Last updated: 2026-07-08 — report-form spam protection (`3f70f00`) and Unitec image/.gitignore (`841144c`) committed; live-site images verified._
 
 ## Identity
 
@@ -14,11 +14,10 @@ _Source of truth for the current project state. Last updated: 2026-07-08 — ins
 ## Git status
 
 - Branch: `main`; remote `origin` → https://github.com/devvnawaz/nz-study-agents.git
-- Latest app-change commit before this handoff update: `45a0f8a` — "Add more
-  institute card images". `npm run build` passes.
-- Untracked locally (intentionally not committed): macOS `.DS_Store` files at repo
-  root, `public/`, and `public/images/`. `tsconfig.tsbuildinfo` may reappear after
-  local type checks; delete it rather than committing it.
+- Latest commit: `841144c` — "Update Unitec card image and ignore OS artifacts".
+  `npm run build` passes; working tree clean.
+- `.gitignore` now covers `.DS_Store` and `tsconfig.tsbuildinfo`, so those OS/build
+  artifacts no longer appear in `git status`.
 
 ## Current features
 
@@ -77,8 +76,8 @@ _Source of truth for the current project state. Last updated: 2026-07-08 — ins
 ## Known limitations / cautions
 
 - Public `/api/reports` is protected by an in-memory rate limit (5 per 10 min per
-  IP) plus a honeypot field and length caps (uncommitted as of 2026-07-08). The
-  limiter is per-serverless-instance (in-memory), so it is best-effort on Vercel —
+  IP) plus a honeypot field and length caps (committed in `3f70f00`). The limiter
+  is per-serverless-instance (in-memory), so it is best-effort on Vercel —
   acceptable for this traffic; a distributed limiter is a later upgrade. No CAPTCHA.
 - No sitemap.xml, robots.txt, or structured data yet.
 - Branding strings are repeated across pages (no central site config).
@@ -95,10 +94,15 @@ _Source of truth for the current project state. Last updated: 2026-07-08 — ins
 
 ## Exact next task
 
-1. Verify the deployed institute-card images on https://www.nzstudy.help/ after the
-   Vercel deploy, especially AUT, EIT/Eastern Institute of Technology, Lincoln,
-   Auckland, Otago, Victoria University of Wellington, Canterbury, Waikato, Massey,
-   and Unitec cards on desktop and mobile.
-2. Ongoing data upkeep: keep agent listings verified against official institute
+1. **SEO basics** — add `public/robots.txt` and a sitemap; consider JSON-LD
+   structured data for FAQ and directory pages. (First item in TASKS.md "Next".)
+2. Optionally verify the deployed spam protection on production: a 6th rapid
+   submission to `/report` should return 429 (limiter is per-instance, so this is
+   best-effort on Vercel).
+3. Ongoing data upkeep: keep agent listings verified against official institute
    pages via the CSV importer in `/manage`.
-3. Next feature-quality tasks (see TASKS.md): robots.txt/sitemap, privacy policy.
+
+Completed verification note (2026-07-08): all 10 institute card images + hero
+photo confirmed rendering on production against real Supabase names (UUID IDs →
+name-based matching), including the "Eastern Institute of Technology - EIT"
+variant; zero gradient fallbacks.

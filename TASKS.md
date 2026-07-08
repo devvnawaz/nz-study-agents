@@ -1,16 +1,13 @@
 # TASKS.md
 
-_Prioritized backlog. Last updated: 2026-07-08 (institute card images committed, `45a0f8a`)._
+_Prioritized backlog. Last updated: 2026-07-08 (spam protection `3f70f00`, Unitec image + .gitignore `841144c`)._
 
 ## Now
 
-1. **Verify deployed institute-card images** on https://www.nzstudy.help/ after
-   the Vercel deploy. Check homepage and `/institutes` at desktop and mobile
-   widths, especially AUT, EIT/Eastern Institute of Technology, Lincoln, UoA,
-   Otago, VUW, Canterbury, Waikato, Massey, and Unitec.
-2. **Confirm image fit/crops** — all card photos should look intentional inside
-   the fixed `h-36` card header with `object-cover`; replace or recrop assets if
-   subjects are awkwardly cropped.
+1. **SEO basics** — add `public/robots.txt` and a sitemap; consider JSON-LD
+   structured data for FAQ and directory pages.
+2. **Optional prod check** — confirm spam protection on the live site (6th rapid
+   `/report` submission should return 429; honeypot silently discards).
 
 ## Next
 
@@ -18,9 +15,7 @@ _Prioritized backlog. Last updated: 2026-07-08 (institute card images committed,
    (user-confirmed 2026-07-08); keep listings verified against official institute
    agent pages via the CSV importer in `/manage` (production import needs the
    user's real `ADMIN_TOKEN`; never request/log it).
-2. **SEO basics** — add `public/robots.txt` and a sitemap; consider JSON-LD
-   structured data for FAQ and directory pages.
-3. **Privacy policy page** — none exists; add if/when the user wants one.
+2. **Privacy policy page** — none exists; add if/when the user wants one.
 
 ## Later
 
@@ -39,14 +34,15 @@ _Prioritized backlog. Last updated: 2026-07-08 (institute card images committed,
 
 ## Done
 
-- **Report-form spam protection** — `/api/reports` now rate limited (5 per
-  10 min per IP via `src/lib/rateLimit.ts`, 429 + Retry-After) with a hidden
-  honeypot field (`website`) that fakes success and discards bot submissions;
-  message/contact length caps added. Verified locally (honeypot not stored,
-  429 after limit). — uncommitted, awaiting review.
+- **Report-form spam protection** — `/api/reports` rate limited (5 per 10 min
+  per IP via `src/lib/rateLimit.ts`, 429 + Retry-After) with a hidden honeypot
+  field (`website`) that fakes success and discards bot submissions;
+  message/contact length caps added. Verified locally. (`3f70f00`)
 - **Live-site image verification (2026-07-08)** — all 10 institute card images
   and the hero photo confirmed rendering on production (nzstudy.help) against
   real Supabase names, including the EIT variant; no gradient fallbacks.
+- **Unitec card image updated** + `.gitignore` covers `.DS_Store` /
+  `tsconfig.tsbuildinfo`; new image verified serving on production. (`841144c`)
 - Scaffold Next.js 14 + TypeScript + Tailwind; data layer with dual-mode access
   (Supabase / local JSON file-store); Supabase schema with RLS.
 - Public pages: home/search, institutes list + detail, agencies list + detail,

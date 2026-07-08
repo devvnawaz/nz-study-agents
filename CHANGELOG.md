@@ -3,18 +3,27 @@
 All notable changes to this project are recorded here.
 Format is loosely based on Keep a Changelog. Dates are YYYY-MM-DD.
 
-## [Unreleased] — implemented, not yet committed
+## [2026-07-08]
 
 ### Added
-- **Report-form spam protection** (`src/pages/api/reports.ts`, `src/pages/report.tsx`):
+- **Report-form spam protection** (commit `3f70f00` — `src/pages/api/reports.ts`,
+  `src/pages/report.tsx`):
   - In-memory rate limit on `/api/reports` — 5 submissions per 10 minutes per IP
     (reuses `src/lib/rateLimit.ts`; returns 429 with `Retry-After`).
   - Hidden honeypot field (`website`) — visually hidden and keyboard/screen-reader
     inaccessible on the form; the API returns a fake success and stores nothing
     when it is filled.
   - Message (5000 chars) and contact (320 chars) length caps.
+- `.gitignore` now covers `.DS_Store` and `tsconfig.tsbuildinfo` (commit `841144c`).
 
-## [2026-07-08]
+### Changed
+- **Unitec card image** replaced with an updated photo (commit `841144c`);
+  verified serving on production.
+
+### Verified
+- All 10 institute card images + the hero photo confirmed rendering on
+  https://www.nzstudy.help/ against production Supabase names (UUID IDs), including
+  the EIT naming variant; no gradient fallbacks.
 
 ### Added
 - **Homepage/institute card imagery**:

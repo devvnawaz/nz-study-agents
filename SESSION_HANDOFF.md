@@ -1,49 +1,69 @@
 # SESSION_HANDOFF.md
 
 _Read this first. Immediate handoff for the next AI/dev session (Codex, Claude Code,
-or human). Updated 2026-07-08._
+or human). Updated 2026-07-08 (end of session)._
 
 ## Snapshot
 
 - **Project:** New Zealand Study Planner - Bangladesh — https://www.nzstudy.help/
 - **Repo:** `~/nz-study-agents`, remote = github.com/devvnawaz/nz-study-agents, branch `main`
 - **Stack:** Next.js 14 (Pages Router), TypeScript strict, Tailwind 3, Supabase, Vercel
-- **Latest app-change commit before this handoff update:** `45a0f8a` — "Add more institute card images"
+- **Latest commits:** `841144c` (Unitec image + .gitignore), `3f70f00` (spam protection)
+- **Working tree:** clean; `npm run build` passes.
 
-## Most recently completed
+## What changed in this session
 
-Recent image work shipped after the full redesign:
+1. **Live-site image verification** (no code change) — all 10 institute card
+   images + hero photo confirmed rendering on production against real Supabase
+   names (UUID IDs → name-based matching), including the
+   "Eastern Institute of Technology - EIT" variant. Zero gradient fallbacks.
+2. **Report-form spam protection** (`3f70f00`):
+   - `src/pages/api/reports.ts` — in-memory rate limit (5 per 10 min per IP via
+     `src/lib/rateLimit.ts`, 429 + `Retry-After`); honeypot check (`website`
+     field → fake 201, nothing stored); message ≤ 5000 / contact ≤ 320 caps.
+   - `src/pages/report.tsx` — hidden honeypot input (off-screen, `aria-hidden`,
+     `tabIndex=-1`, `autoComplete="off"`); form otherwise unchanged.
+3. **Housekeeping** (`841144c`) — `.gitignore` now covers `.DS_Store` and
+   `tsconfig.tsbuildinfo`; Unitec card image replaced with an updated photo
+   (verified serving on production, byte-identical to local).
 
-- `public/images/hero-nz.jpg` was added for the homepage hero backdrop.
-- `src/components/InstituteCard.tsx` now renders local WebP photo headers when
-  available, with the original gradient/type-icon header as fallback.
-- Institute card assets live in `public/images/institutes/`: `inst-aut.webp`,
-  `inst-canterbury.webp`, `inst-eit.webp`, `inst-lincoln.webp`,
-  `inst-massey.webp`, `inst-otago.webp`, `inst-unitec.webp`, `inst-uoa.webp`,
-  `inst-vuw.webp`, `inst-waikato.webp`.
-- Image matching supports local/demo IDs and normalized production institute
-  names because Supabase production IDs may be UUIDs. EIT needed special handling
-  for naming variants.
+## Known issues / risks
 
-Build passed after the image-mapping changes.
+- The public rate limiter is **in-memory / per-serverless-instance** on Vercel —
+  best-effort, not globally strict. Documented upgrade path: distributed limiter
+  (e.g. Upstash) if spam persists. Do NOT fake stronger protection.
+- No robots.txt / sitemap / structured data yet (top backlog item).
+- Local `.data/store.json` contains throwaway test reports from this session's
+  local verification — harmless, gitignored, dev-only.
+- Dev-server tip: don't run `npm run build` while `next dev` is running — they
+  share `.next` and the dev server can crash with MODULE_NOT_FOUND; clean with
+  `rm -rf .next` and restart if it happens.
 
-## Currently in progress
+## What should be tested
 
-- Nothing mid-flight. The latest image changes were pushed to `main`, so Vercel
-  should auto-deploy. Local untracked files are only macOS `.DS_Store` files at
-  repo root, `public/`, and `public/images/`; do not commit them.
+- On production (optional): 6 rapid `/report` submissions → 6th should return 429;
+  honeypot-filled POST returns 201 but stores nothing.
+- Report form still submits normally for real users (verified locally: 201 +
+  stored; empty message → 400).
+- Unitec card photo crop looks right in the `h-36` header on desktop + mobile.
 
-## Next recommended task
+## What should be done next
 
-1. Verify deployed institute-card images at https://www.nzstudy.help/ on the
-   homepage and `/institutes`, including mobile widths. Specifically check AUT,
-   EIT/Eastern Institute of Technology, Lincoln, UoA, Otago, VUW, Canterbury,
-   Waikato, Massey, and Unitec.
-2. If any provider image is missing on production, inspect the exact Supabase
-   institute name and add an explicit normalized-name mapping in
-   `src/components/InstituteCard.tsx`.
-3. Then pick from TASKS.md "Next": robots.txt/sitemap, privacy policy, or ongoing
-   verified-data upkeep via the CSV importer.
+1. **SEO basics** (top of TASKS.md) — `public/robots.txt` + sitemap; consider
+   JSON-LD for FAQ/directory pages.
+2. **Privacy policy page** — if/when the user wants one.
+3. Ongoing verified-data upkeep via the CSV importer in `/manage`.
+
+## Important constraints (unchanged)
+
+- **Do not commit or push unless the user asks.**
+- Never touch Vercel env vars; never request/log the real `ADMIN_TOKEN`.
+- Don't break: SearchExplorer filters, calculator math/Frankfurter fetch, FAQ
+  `<details>` accordions, `/api/reports` JSON contract (now includes optional
+  `website` honeypot key), admin `/manage` (not restyled, intentional).
+- No login/auth features; site is not immigration advice; never invent data.
+- Branding: site = "New Zealand Study Planner - Bangladesh"; short = "NZ Study
+  Planner"; "NZ Study Agent Directory - Bangladesh" only for the directory feature.
 
 ## How to run and verify
 
@@ -54,35 +74,9 @@ npm run build      # must pass before any commit
 ```
 
 Manual checks: `/` (hero photo + floating search + institute card images),
-`/institutes` (image cards + filters), `/institutes/inst-uoa`, `/agencies`,
+`/institutes` (image cards + filters), `/institutes/[id]`, `/agencies`,
 `/faq` (accordions), `/cost-calculator` (30000/0/1.5yr/20000/5000 → NZD 80,000;
-rate fetch + manual edit), `/report` (submits in demo mode), mobile menu.
-
-## Important warnings
-
-- **Do not commit or push unless the user asks.**
-- **Do not** add or change Vercel env vars; never request/log the real `ADMIN_TOKEN`.
-- **Do not** break: SearchExplorer filter logic, calculator math/fetch, FAQ
-  `<details>` accordions, report POST contract (`/api/reports`), admin `/manage`.
-- **Do not** invent agency/institute data; "(DEMO)" entries are placeholders.
-- **Do not** fetch card images from remote URLs. Use compressed local WebP assets
-  in `public/images/institutes/` and explicit mappings in `InstituteCard.tsx`.
-- **Do not** add login/auth or fake spam protection; site is not immigration advice.
-- Admin `/manage` was deliberately NOT restyled — leave it unless asked.
-- Delete `tsconfig.tsbuildinfo` before committing; never commit `.data/`, `.env*`,
-  or `.DS_Store`.
-
-## Files likely to be touched next
-
-- If redesign feedback: `src/components/*` (Navbar, Footer, HeroBackdrop,
-  InstituteCard, SearchExplorer, PageHeader, Alert), `src/pages/index.tsx`,
-  `src/styles/globals.css`, `tailwind.config.js`.
-- If image-card follow-up: `src/components/InstituteCard.tsx` and
-  `public/images/institutes/*.webp`.
-- If data work: `/manage` CSV import flow (`src/lib/csvImport.ts`,
-  `src/pages/api/admin/import-csv.ts`), `templates/*.csv`.
-- If SEO/protection follow-ups: `public/robots.txt` + sitemap (new),
-  `src/pages/api/reports.ts` (rate limit via existing `src/lib/rateLimit.ts`).
+rate fetch + manual edit), `/report` (submits; honeypot hidden), mobile menu.
 
 ## Memory files map
 

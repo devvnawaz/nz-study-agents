@@ -106,6 +106,23 @@ _Architectural, product, and process decisions, with rationale. Last updated 202
 - Chosen as a minimal hardening step; it is intentionally simple and can be replaced with
   a distributed limiter later if traffic warrants it.
 
+## Report-form spam protection (2026-07-08)
+
+- **Honeypot over CAPTCHA** — a hidden `website` field (off-screen, `aria-hidden`,
+  `tabIndex=-1`) instead of a CAPTCHA: zero friction for legitimate students on
+  slow connections/older devices, no third-party dependency, and adequate for this
+  site's threat model (drive-by form bots, not targeted attacks).
+- **Fake success on honeypot hit** — the API returns 201 and stores nothing, so
+  bots cannot detect the trap and adapt.
+- **Public rate limit reuses the existing in-memory limiter** — 5 submissions per
+  10 minutes per IP on `/api/reports`. Accepted limitation: on Vercel the limiter
+  is per-serverless-instance, so it is best-effort rather than globally strict;
+  a distributed limiter (e.g. Upstash/Redis) is the documented upgrade path if
+  spam persists.
+- **Input caps** — message ≤ 5000 chars, contact ≤ 320 chars, to bound stored junk.
+- Client keeps sending the same JSON contract plus the honeypot key; no breaking
+  change to `/api/reports`.
+
 ## Server-only secrets
 
 - **`SUPABASE_SERVICE_ROLE_KEY` remains server-only** — referenced only in `src/lib/supabaseAdmin.ts`, imported only by `/api/admin/*` routes, and never exposed with a `NEXT_PUBLIC_` prefix.
