@@ -1,13 +1,16 @@
 # TASKS.md
 
-_Prioritized backlog. Last updated: 2026-07-08 (visual redesign committed, `2914959`)._
+_Prioritized backlog. Last updated: 2026-07-08 (institute card images committed, `45a0f8a`)._
 
 ## Now
 
-1. **Verify the deployed redesign** on https://www.nzstudy.help/ after the
-   Vercel deploy (all pages + mobile widths).
-2. **Hero photo (optional)** — user supplies `public/images/hero-nz.jpg` per
-   `public/images/README.md`; no code change needed.
+1. **Verify deployed institute-card images** on https://www.nzstudy.help/ after
+   the Vercel deploy. Check homepage and `/institutes` at desktop and mobile
+   widths, especially AUT, EIT/Eastern Institute of Technology, Lincoln, UoA,
+   Otago, VUW, Canterbury, Waikato, Massey, and Unitec.
+2. **Confirm image fit/crops** — all card photos should look intentional inside
+   the fixed `h-36` card header with `object-cover`; replace or recrop assets if
+   subjects are awkwardly cropped.
 
 ## Next
 
@@ -27,7 +30,8 @@ _Prioritized backlog. Last updated: 2026-07-08 (visual redesign committed, `2914
 - Central site config (site name/description/nav links defined once — branding
   strings currently repeat across pages).
 - Clearer "last verified" display on listings if users find it too subtle.
-- Institute card photos — swap gradient headers for real licensed campus images.
+- Add/replace institute card photos for remaining providers as suitable licensed
+  and compressed WebP assets become available; update `InstituteCard.tsx` mappings.
 - Accessibility pass — skip link, focus audit on the dark header/footer, contrast checks.
 - CSV importer follow-ups: update-existing links, fuzzy name matching,
   downloadable error report, dedupe by website/email, native multipart upload.
@@ -61,6 +65,10 @@ _Prioritized backlog. Last updated: 2026-07-08 (visual redesign committed, `2914
   gradient institute cards, dark footer, PageHeader/Alert/icons components,
   FAQ jump list, interview category cards, calculator restyle) — reviewed and
   committed. (`2914959`)
+- **Homepage hero photo** at `public/images/hero-nz.jpg`. (`7fa4448`)
+- **Institute card images** — local WebP photo headers with gradient fallback,
+  plus mappings for AUT, EIT, Lincoln, UoA, Otago, VUW, Canterbury, Waikato,
+  Massey, and Unitec. (`270ffe7`, `443a7f0`, `6c9c54c`, `45a0f8a`)
 
 ## Blocked
 

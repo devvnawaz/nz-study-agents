@@ -5,7 +5,20 @@ Format is loosely based on Keep a Changelog. Dates are YYYY-MM-DD.
 
 ## [2026-07-08]
 
+### Added
+- **Homepage/institute card imagery**:
+  - Added `public/images/hero-nz.jpg` for the homepage hero backdrop.
+  - Added WebP institute-card images under `public/images/institutes/` for AUT,
+    EIT/Eastern Institute of Technology, Lincoln, University of Auckland,
+    University of Otago, Victoria University of Wellington, University of
+    Canterbury, University of Waikato, Massey University, and Unitec.
+
 ### Changed
+- **Institute cards now use real images where available**:
+  - `src/components/InstituteCard.tsx` renders a local WebP photo header when a
+    matching asset exists, with gradient fallback for all other institutes.
+  - Matching supports local/demo institute IDs and normalized production Supabase
+    institute names, including EIT naming variants.
 - **Full visual redesign** (commit `2914959`, navy + teal theme, based on the user's reference design):
   - New Tailwind tokens `ink` (navy) and `accent` (teal); new shared classes
     (`.btn-primary` teal, `.btn-dark`, `.input`, `.select`, `.alert-info/-warning`).

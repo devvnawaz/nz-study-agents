@@ -1,6 +1,6 @@
 # PROJECT_STATE.md
 
-_Source of truth for the current project state. Last updated: 2026-07-08 — full visual redesign committed (`2914959`)._
+_Source of truth for the current project state. Last updated: 2026-07-08 — institute card images committed (`45a0f8a`)._
 
 ## Identity
 
@@ -14,15 +14,18 @@ _Source of truth for the current project state. Last updated: 2026-07-08 — ful
 ## Git status
 
 - Branch: `main`; remote `origin` → https://github.com/devvnawaz/nz-study-agents.git
-- Latest commit: `2914959` — "Redesign UI with navy and teal theme". `npm run build` passes.
-- Untracked (intentionally not committed): `architecture-summary.pdf` — a generated
-  doc for the user, not a repo asset. `tsconfig.tsbuildinfo` may reappear after
+- Latest app-change commit before this handoff update: `45a0f8a` — "Add more
+  institute card images". `npm run build` passes.
+- Untracked locally (intentionally not committed): macOS `.DS_Store` files at repo
+  root, `public/`, and `public/images/`. `tsconfig.tsbuildinfo` may reappear after
   local type checks; delete it rather than committing it.
 
 ## Current features
 
 1. **Institute directory** — `/institutes` list + `/institutes/[id]` detail with
    authorized agents, source links, last-verified dates; client-side search/type/city filter.
+   Institute cards use WebP images when available and fall back to the original
+   type gradient for institutes without an image.
 2. **Agencies** — `/agencies` list + `/agencies/[id]` detail (contacts, institutes represented).
 3. **Student Visa FAQ** — `/faq`, 9 categories, `<details>` accordions, official source links.
 4. **Interview questions** — `/interview-questions`, 11 grouped categories.
@@ -58,12 +61,18 @@ _Source of truth for the current project state. Last updated: 2026-07-08 — ful
   (`.btn-primary` teal, `.btn-dark`, `.input`, `.select`, `.alert-*`, `.card`).
 - Dark navy sticky header + dark footer on all pages; homepage hero with badge,
   "Your Path to **New Zealand** Starts Here", stats row, floating search card
-  overlapping the hero; modern institute cards with gradient "image" headers +
-  SVG type icons; `PageHeader` navy band on inner pages; `Alert` component for
-  disclaimers; inline SVG icon set (`src/components/icons.tsx`) replacing emoji.
-- **Hero photo:** optional `public/images/hero-nz.jpg` (see `public/images/README.md`);
-  falls back to navy gradient + SVG mountain silhouette (`HeroBackdrop.tsx`).
-  The user has not yet supplied the photo.
+  overlapping the hero; modern institute cards with photo headers where assets
+  exist, otherwise gradient "image" headers + SVG type icons; `PageHeader` navy
+  band on inner pages; `Alert` component for disclaimers; inline SVG icon set
+  (`src/components/icons.tsx`) replacing emoji.
+- **Hero photo:** `public/images/hero-nz.jpg` exists and is used by
+  `HeroBackdrop.tsx` under a navy overlay; if removed, the hero falls back to the
+  SVG mountain silhouette.
+- **Institute card images:** stored in `public/images/institutes/*.webp`.
+  `src/components/InstituteCard.tsx` maps known demo IDs and normalized production
+  institute names to those filenames. Current assets: `inst-aut`, `inst-canterbury`,
+  `inst-eit`, `inst-lincoln`, `inst-massey`, `inst-otago`, `inst-unitec`,
+  `inst-uoa`, `inst-vuw`, `inst-waikato`.
 
 ## Known limitations / cautions
 
@@ -78,13 +87,17 @@ _Source of truth for the current project state. Last updated: 2026-07-08 — ful
 - Production admin actions need the user's real `ADMIN_TOKEN` — never request or log it.
 - `src/pages/manage/index.tsx` (~785 lines) is the most complex file; it was NOT
   restyled in the redesign (deliberately out of scope).
+- Image matching for institute cards is deliberately explicit. If production
+  Supabase has provider names that differ from the current normalized-name checks,
+  add a mapping in `InstituteCard.tsx` rather than relying on broad fuzzy matching.
 
 ## Exact next task
 
-1. Verify the deployed redesign on https://www.nzstudy.help/ after the Vercel deploy.
-2. Optional: user supplies `public/images/hero-nz.jpg` for the photo hero
-   (spec in `public/images/README.md`; falls back to SVG mountains until then).
-3. Ongoing data upkeep: keep agent listings verified against official institute
+1. Verify the deployed institute-card images on https://www.nzstudy.help/ after the
+   Vercel deploy, especially AUT, EIT/Eastern Institute of Technology, Lincoln,
+   Auckland, Otago, Victoria University of Wellington, Canterbury, Waikato, Massey,
+   and Unitec cards on desktop and mobile.
+2. Ongoing data upkeep: keep agent listings verified against official institute
    pages via the CSV importer in `/manage`.
-4. Next feature-quality tasks (see TASKS.md): report-form spam protection,
+3. Next feature-quality tasks (see TASKS.md): report-form spam protection,
    robots.txt/sitemap, privacy policy.

@@ -37,13 +37,17 @@ _Architectural, product, and process decisions, with rationale. Last updated 202
   overlapping the hero, modern rounded cards with soft shadows.
 - **Tokens added, not replaced** — `accent` and `ink` scales were added to
   `tailwind.config.js`; legacy `brand`/`nz` tokens remain so old classes never break.
-- **Hero image strategy** — the hero references optional `/images/hero-nz.jpg`
+- **Hero image strategy** — the hero references local `/images/hero-nz.jpg`
   under a navy gradient overlay, with an inline SVG mountain silhouette fallback
-  (`HeroBackdrop.tsx`). Rationale: no suitable local asset existed and remote
-  image URLs were ruled out as fragile; the page must look finished without the photo.
-- **Institute card "images" are CSS gradients + SVG icons** — per-type gradient
-  headers (`getTypeGradient`) instead of stock photos: consistent, zero binary
-  assets, no licensing risk. Real campus photos can replace them later.
+  (`HeroBackdrop.tsx`) if the file is ever missing. Remote image URLs were ruled
+  out as fragile.
+- **Institute card image strategy** — institute cards use local WebP files from
+  `/public/images/institutes/` when an asset exists, and keep the per-type
+  gradient + SVG icon fallback for all other institutes. `InstituteCard.tsx`
+  deliberately maps images by known demo IDs and normalized production institute
+  names because production Supabase IDs can differ from local seed IDs. Avoid
+  remote images and avoid broad fuzzy matching; add explicit mappings as new
+  licensed/compressed assets are added.
 - **Icons: inline SVG set** (`src/components/icons.tsx`) replaces emoji iconography
   in redesigned surfaces — crisper and stylable; no icon library dependency.
 - **Shared building blocks** — `PageHeader` (navy inner-page band) and `Alert`
