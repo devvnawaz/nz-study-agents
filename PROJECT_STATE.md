@@ -76,8 +76,10 @@ _Source of truth for the current project state. Last updated: 2026-07-08 — ins
 
 ## Known limitations / cautions
 
-- Public `/api/reports` has **no spam protection** (no CAPTCHA/rate limit) — only
-  required-message validation. Known gap; do not fake protection.
+- Public `/api/reports` is protected by an in-memory rate limit (5 per 10 min per
+  IP) plus a honeypot field and length caps (uncommitted as of 2026-07-08). The
+  limiter is per-serverless-instance (in-memory), so it is best-effort on Vercel —
+  acceptable for this traffic; a distributed limiter is a later upgrade. No CAPTCHA.
 - No sitemap.xml, robots.txt, or structured data yet.
 - Branding strings are repeated across pages (no central site config).
 - Production Supabase holds real data (user-confirmed 2026-07-08). Any remaining
@@ -99,5 +101,4 @@ _Source of truth for the current project state. Last updated: 2026-07-08 — ins
    and Unitec cards on desktop and mobile.
 2. Ongoing data upkeep: keep agent listings verified against official institute
    pages via the CSV importer in `/manage`.
-3. Next feature-quality tasks (see TASKS.md): report-form spam protection,
-   robots.txt/sitemap, privacy policy.
+3. Next feature-quality tasks (see TASKS.md): robots.txt/sitemap, privacy policy.

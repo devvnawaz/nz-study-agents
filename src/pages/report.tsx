@@ -13,6 +13,8 @@ export default function ReportPage() {
 
   const [message, setMessage] = useState('');
   const [contact, setContact] = useState('');
+  // Honeypot — hidden from real users; bots tend to fill it.
+  const [website, setWebsite] = useState('');
   const [status, setStatus] = useState<Status>('idle');
 
   async function handleSubmit(e: React.FormEvent) {
@@ -28,6 +30,7 @@ export default function ReportPage() {
           agency_id: typeof agency === 'string' ? agency : undefined,
           message: message.trim(),
           reporter_contact: contact.trim() || undefined,
+          website,
         }),
       });
       if (!res.ok) throw new Error('Request failed');
@@ -64,13 +67,27 @@ export default function ReportPage() {
               </button>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="card space-y-5 p-6 sm:p-7">
+            <form onSubmit={handleSubmit} className="card relative space-y-5 p-6 sm:p-7">
               {(institute || agency) && (
                 <Alert variant="info" title="Linked listing">
                   This report is linked to {institute ? 'an institute' : 'an agency'} listing. You can also
                   describe the issue in the message below.
                 </Alert>
               )}
+
+              {/* Honeypot field — visually hidden and skipped by keyboard/screen readers */}
+              <div aria-hidden="true" className="absolute -left-[9999px] top-auto h-px w-px overflow-hidden">
+                <label htmlFor="website">Website</label>
+                <input
+                  id="website"
+                  name="website"
+                  type="text"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={website}
+                  onChange={(e) => setWebsite(e.target.value)}
+                />
+              </div>
 
               <div>
                 <label htmlFor="message" className="mb-1.5 block text-sm font-medium text-ink-700">

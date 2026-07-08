@@ -18,12 +18,9 @@ _Prioritized backlog. Last updated: 2026-07-08 (institute card images committed,
    (user-confirmed 2026-07-08); keep listings verified against official institute
    agent pages via the CSV importer in `/manage` (production import needs the
    user's real `ADMIN_TOKEN`; never request/log it).
-2. **Spam protection for the report form** — `/api/reports` currently has no
-   rate limit or CAPTCHA; reuse `src/lib/rateLimit.ts` and/or add a honeypot.
-   Do NOT fake protection — implement it properly or leave it documented.
-3. **SEO basics** — add `public/robots.txt` and a sitemap; consider JSON-LD
+2. **SEO basics** — add `public/robots.txt` and a sitemap; consider JSON-LD
    structured data for FAQ and directory pages.
-4. **Privacy policy page** — none exists; add if/when the user wants one.
+3. **Privacy policy page** — none exists; add if/when the user wants one.
 
 ## Later
 
@@ -42,6 +39,14 @@ _Prioritized backlog. Last updated: 2026-07-08 (institute card images committed,
 
 ## Done
 
+- **Report-form spam protection** — `/api/reports` now rate limited (5 per
+  10 min per IP via `src/lib/rateLimit.ts`, 429 + Retry-After) with a hidden
+  honeypot field (`website`) that fakes success and discards bot submissions;
+  message/contact length caps added. Verified locally (honeypot not stored,
+  429 after limit). — uncommitted, awaiting review.
+- **Live-site image verification (2026-07-08)** — all 10 institute card images
+  and the hero photo confirmed rendering on production (nzstudy.help) against
+  real Supabase names, including the EIT variant; no gradient fallbacks.
 - Scaffold Next.js 14 + TypeScript + Tailwind; data layer with dual-mode access
   (Supabase / local JSON file-store); Supabase schema with RLS.
 - Public pages: home/search, institutes list + detail, agencies list + detail,

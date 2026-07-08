@@ -42,8 +42,8 @@ Build passed after the image-mapping changes.
 2. If any provider image is missing on production, inspect the exact Supabase
    institute name and add an explicit normalized-name mapping in
    `src/components/InstituteCard.tsx`.
-3. Then pick from TASKS.md "Next": report-form spam protection, robots.txt/sitemap,
-   privacy policy, or ongoing verified-data upkeep via the CSV importer.
+3. Then pick from TASKS.md "Next": robots.txt/sitemap, privacy policy, or ongoing
+   verified-data upkeep via the CSV importer.
 
 ## How to run and verify
 

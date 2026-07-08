@@ -3,6 +3,17 @@
 All notable changes to this project are recorded here.
 Format is loosely based on Keep a Changelog. Dates are YYYY-MM-DD.
 
+## [Unreleased] — implemented, not yet committed
+
+### Added
+- **Report-form spam protection** (`src/pages/api/reports.ts`, `src/pages/report.tsx`):
+  - In-memory rate limit on `/api/reports` — 5 submissions per 10 minutes per IP
+    (reuses `src/lib/rateLimit.ts`; returns 429 with `Retry-After`).
+  - Hidden honeypot field (`website`) — visually hidden and keyboard/screen-reader
+    inaccessible on the form; the API returns a fake success and stores nothing
+    when it is filled.
+  - Message (5000 chars) and contact (320 chars) length caps.
+
 ## [2026-07-08]
 
 ### Added
