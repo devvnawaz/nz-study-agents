@@ -10,8 +10,15 @@ interface InstituteCardProps {
 
 const INSTITUTE_IMAGE_BY_ID: Record<string, string> = {
   'inst-aut': 'inst-aut',
+  'inst-canterbury': 'inst-canterbury',
   'inst-eit': 'inst-eit',
   'inst-lincoln': 'inst-lincoln',
+  'inst-massey': 'inst-massey',
+  'inst-otago': 'inst-otago',
+  'inst-unitec': 'inst-unitec',
+  'inst-uoa': 'inst-uoa',
+  'inst-vuw': 'inst-vuw',
+  'inst-waikato': 'inst-waikato',
 };
 
 const INSTITUTE_IMAGE_BY_NAME: Record<string, string> = {
@@ -19,6 +26,13 @@ const INSTITUTE_IMAGE_BY_NAME: Record<string, string> = {
   'eastern institute of technology': 'inst-eit',
   'eit': 'inst-eit',
   'lincoln university': 'inst-lincoln',
+  'massey university': 'inst-massey',
+  'unitec institute of technology': 'inst-unitec',
+  'university of auckland': 'inst-uoa',
+  'university of canterbury': 'inst-canterbury',
+  'university of otago': 'inst-otago',
+  'university of waikato': 'inst-waikato',
+  'victoria university of wellington': 'inst-vuw',
 };
 
 function normalizeInstituteName(name: string): string {
@@ -39,7 +53,14 @@ function getInstituteImageSrc(institute: Institute): string | null {
     (normalizedName.includes('eastern institute of technology') || normalizedName.includes('eit')
       ? 'inst-eit'
       : null) ??
-    (normalizedName.includes('lincoln university') ? 'inst-lincoln' : null);
+    (normalizedName.includes('lincoln university') ? 'inst-lincoln' : null) ??
+    (normalizedName.includes('massey university') ? 'inst-massey' : null) ??
+    (normalizedName.includes('unitec institute of technology') ? 'inst-unitec' : null) ??
+    (normalizedName.includes('university of auckland') ? 'inst-uoa' : null) ??
+    (normalizedName.includes('university of canterbury') ? 'inst-canterbury' : null) ??
+    (normalizedName.includes('university of otago') ? 'inst-otago' : null) ??
+    (normalizedName.includes('university of waikato') ? 'inst-waikato' : null) ??
+    (normalizedName.includes('victoria university of wellington') ? 'inst-vuw' : null);
 
   return imageName ? `/images/institutes/${imageName}.webp` : null;
 }
