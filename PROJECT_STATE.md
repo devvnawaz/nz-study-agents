@@ -1,6 +1,6 @@
 # PROJECT_STATE.md
 
-_Source of truth for the current project state. Last updated: 2026-07-11 — visa-checklist feature implemented (uncommitted, awaiting user review)._
+_Source of truth for the current project state. Last updated: 2026-07-11 — visa-checklist feature committed (`a4c2ef8`)._
 
 ## Identity
 
@@ -92,7 +92,7 @@ _Source of truth for the current project state. Last updated: 2026-07-11 — vis
   Supabase has provider names that differ from the current normalized-name checks,
   add a mapping in `InstituteCard.tsx` rather than relying on broad fuzzy matching.
 
-## Visa checklist feature (implemented 2026-07-11, UNCOMMITTED)
+## Visa checklist feature (committed 2026-07-11, `a4c2ef8`)
 
 Built per the agreed plan after the user answered the open questions
 (agent-drafted content; Bachelor's + Master's only for now, others later;
@@ -127,9 +127,9 @@ rule and the level-9 partner work-visa distinction. Original plan follows:
 
 ## Exact next task
 
-1. **User reviews the visa checklist** at `/visa-checklist` on the dev server
-   (both study levels × all three family situations; tick persistence across
-   reload). On approval, commit + push (suggested: "Add student visa checklist").
+1. **Verify the deployed visa checklist** at https://www.nzstudy.help/visa-checklist
+   after the Vercel deploy (both study levels × all three family situations;
+   tick persistence; mobile layout).
 2. **SEO basics** — add `public/robots.txt` and a sitemap; consider JSON-LD
    structured data for FAQ and directory pages.
 3. Optionally verify the deployed spam protection on production: a 6th rapid

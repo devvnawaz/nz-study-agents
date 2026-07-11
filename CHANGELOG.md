@@ -3,10 +3,10 @@
 All notable changes to this project are recorded here.
 Format is loosely based on Keep a Changelog. Dates are YYYY-MM-DD.
 
-## [Unreleased] — implemented, not yet committed
+## [2026-07-11]
 
 ### Added
-- **Visa checklist** page at `/visa-checklist` (`src/pages/visa-checklist.tsx`):
+- **Visa checklist** page at `/visa-checklist` (commit `a4c2ef8`, `src/pages/visa-checklist.tsx`):
   - Profile-driven: study-level chips (Bachelor's / Master's) × family chips
     (Just me / With spouse-partner / With spouse & children); checklist composed
     from typed modules (base + level-specific + spouse + children items).

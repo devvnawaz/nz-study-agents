@@ -4,9 +4,8 @@ _Prioritized backlog. Last updated: 2026-07-09 (visa-checklist feature planned).
 
 ## Now
 
-1. **Visa checklist review + commit** — feature implemented 2026-07-11
-   (uncommitted). User reviews `/visa-checklist` on the dev server, then commit
-   + push on approval.
+1. **Verify the deployed visa checklist** on https://www.nzstudy.help/visa-checklist
+   (profiles, tick persistence, mobile) after the Vercel deploy. (`a4c2ef8`)
 2. **SEO basics** — add `public/robots.txt` and a sitemap; consider JSON-LD
    structured data for FAQ and directory pages.
 3. **Optional prod check** — confirm spam protection on the live site (6th rapid
