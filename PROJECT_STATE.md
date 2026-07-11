@@ -1,6 +1,6 @@
 # PROJECT_STATE.md
 
-_Source of truth for the current project state. Last updated: 2026-07-09 — visa-checklist feature planned (not yet built); no code changes since `841144c`._
+_Source of truth for the current project state. Last updated: 2026-07-11 — visa-checklist feature implemented (uncommitted, awaiting user review)._
 
 ## Identity
 
@@ -92,7 +92,18 @@ _Source of truth for the current project state. Last updated: 2026-07-09 — vis
   Supabase has provider names that differ from the current normalized-name checks,
   add a mapping in `InstituteCard.tsx` rather than relying on broad fuzzy matching.
 
-## Planned feature: Visa checklist (agreed 2026-07-09, not yet built)
+## Visa checklist feature (implemented 2026-07-11, UNCOMMITTED)
+
+Built per the agreed plan after the user answered the open questions
+(agent-drafted content; Bachelor's + Master's only for now, others later;
+immigration.govt.nz as source of truth). Changed files:
+`src/pages/visa-checklist.tsx` (new), `src/components/Navbar.tsx`,
+`src/components/Footer.tsx`, plus context docs. Build passes (36 pages).
+Checklist content researched live from the INZ Fee Paying Student Visa and
+bringing-family pages, including the South Asia immediate-family sponsorship
+rule and the level-9 partner work-visa distinction. Original plan follows:
+
+## Original plan (agreed 2026-07-09)
 
 - **Route:** `/visa-checklist` — one profile-driven page, NOT four separate pages.
 - **Profile selector:** chip groups (calculator-duration-chip pattern) for study
@@ -110,16 +121,15 @@ _Source of truth for the current project state. Last updated: 2026-07-09 — vis
   official requirements list); no PDF export for now.
 - **Nav impact:** adds a 7th nav item — accept tighter `lg` spacing for now;
   revisit a "Resources" dropdown only when an 8th item appears.
-- **OPEN QUESTIONS (blocking start, awaiting user):**
-  1. Content source — agent drafts cautious wording + INZ links (like FAQ), or
-     user supplies a prepared list?
-  2. Study-level split — Bachelor's/Master's only, or also PhD (different work
-     rights/family rules) / diploma-polytechnic?
+- ~~Open questions~~ RESOLVED 2026-07-11: agent drafts content; Bachelor's +
+  Master's only (PhD/diploma later); immigration.govt.nz is the source of truth,
+  third-party sources only as fallback.
 
 ## Exact next task
 
-1. **Visa checklist feature** — once the user answers the two open questions
-   above, build `/visa-checklist` per the plan.
+1. **User reviews the visa checklist** at `/visa-checklist` on the dev server
+   (both study levels × all three family situations; tick persistence across
+   reload). On approval, commit + push (suggested: "Add student visa checklist").
 2. **SEO basics** — add `public/robots.txt` and a sitemap; consider JSON-LD
    structured data for FAQ and directory pages.
 3. Optionally verify the deployed spam protection on production: a 6th rapid

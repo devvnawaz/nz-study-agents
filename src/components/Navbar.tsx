@@ -6,6 +6,7 @@ const NAV_LINKS = [
   { href: '/institutes', label: 'Institutes' },
   { href: '/agencies', label: 'Agencies' },
   { href: '/faq', label: 'FAQ' },
+  { href: '/visa-checklist', label: 'Visa Checklist' },
   { href: '/cost-calculator', label: 'Cost Calculator' },
   { href: '/interview-questions', label: 'Interview Questions' },
   { href: '/about', label: 'About' },

@@ -4,11 +4,9 @@ _Prioritized backlog. Last updated: 2026-07-09 (visa-checklist feature planned).
 
 ## Now
 
-1. **Visa checklist feature** (`/visa-checklist`) — plan agreed 2026-07-09; see
-   PROJECT_STATE.md "Planned feature" for the full spec. **Blocked on two user
-   answers before starting:** (a) content source — agent-drafted cautious wording
-   + INZ links vs. user-supplied list; (b) study-level split — Bachelor's/Master's
-   only, or also PhD / diploma-polytechnic.
+1. **Visa checklist review + commit** — feature implemented 2026-07-11
+   (uncommitted). User reviews `/visa-checklist` on the dev server, then commit
+   + push on approval.
 2. **SEO basics** — add `public/robots.txt` and a sitemap; consider JSON-LD
    structured data for FAQ and directory pages.
 3. **Optional prod check** — confirm spam protection on the live site (6th rapid
@@ -23,6 +21,9 @@ _Prioritized backlog. Last updated: 2026-07-09 (visa-checklist feature planned).
 2. **Privacy policy page** — none exists; add if/when the user wants one.
 
 ## Later
+
+- Visa checklist: add more study levels (PhD, diploma/polytechnic) as chips —
+  deliberately deferred; PhD has different partner/child and insurance rules.
 
 - Central site config (site name/description/nav links defined once — branding
   strings currently repeat across pages).

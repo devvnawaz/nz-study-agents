@@ -3,6 +3,22 @@
 All notable changes to this project are recorded here.
 Format is loosely based on Keep a Changelog. Dates are YYYY-MM-DD.
 
+## [Unreleased] — implemented, not yet committed
+
+### Added
+- **Visa checklist** page at `/visa-checklist` (`src/pages/visa-checklist.tsx`):
+  - Profile-driven: study-level chips (Bachelor's / Master's) × family chips
+    (Just me / With spouse-partner / With spouse & children); checklist composed
+    from typed modules (base + level-specific + spouse + children items).
+  - ~21–27 checkbox items across 5–7 grouped sections, each with cautious wording
+    and official Immigration New Zealand source links (researched from
+    immigration.govt.nz, including the South Asia immediate-family sponsorship
+    note and the level-9 Partner of a Student Work Visa distinction).
+  - Progress bar + counter; ticks and profile persisted to localStorage
+    (`nzsp-visa-checklist-v1`); reset button; strong "preparation aid, not
+    official requirements" disclaimer; links to calculator/FAQ/interview pages.
+  - Nav (7th item) and footer links added.
+
 ## [2026-07-08]
 
 ### Added

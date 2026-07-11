@@ -5,6 +5,7 @@ const QUICK_LINKS = [
   { href: '/agencies', label: 'Browse Agencies' },
   { href: '/cost-calculator', label: 'Cost Calculator' },
   { href: '/faq', label: 'Student Visa FAQ' },
+  { href: '/visa-checklist', label: 'Visa Checklist' },
   { href: '/interview-questions', label: 'Interview Questions' },
   { href: '/report', label: 'Report Outdated Info' },
   { href: '/about', label: 'About this Directory' },
